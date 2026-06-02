@@ -58,8 +58,8 @@
         <mat-label>Topic</mat-label>
         <mat-select [(ngModel)]="userTopic" (ngModelChange)="updateTopic($event)">
           <mat-option value="">Please select a value</mat-option>
-          @for (topic of (dropDownData$ | async) ?? []; track topic) {
-            <mat-option [value]="topic">{{topic}}</mat-option>
+          @for (topic of (dropDownData$ | async) ?? []; track topic.id) {
+            <mat-option [value]="topic.email">{{topic.email}}</mat-option>
           }
         </mat-select>
       </mat-form-field>

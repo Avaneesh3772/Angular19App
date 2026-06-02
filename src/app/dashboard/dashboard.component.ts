@@ -1,26 +1,18 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
+import { ANGULAR_MATERIAL_MODULES } from '../shared/angular-material';
 import { DashboardConstants } from './dashboard.constants';
-import { UserList } from './dashboard.models';
+import { PostComment, UserList } from './dashboard.models';
 import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-    MatTableModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatFormFieldModule,
-    MatSelectModule,
+    ...ANGULAR_MATERIAL_MODULES,
     FormsModule,
     AsyncPipe,
   ],
@@ -35,7 +27,7 @@ export class DashboardComponent implements OnInit {
   public displayedColumns: string[] = DashboardConstants.displayedColumns;
   public errorMessage: string = '';
   public userDataLoaded = false;
-  public dropDownData$!: Observable<unknown>;
+  public dropDownData$!: Observable<PostComment[]>;
   public userTopic: string = '';
 
   ngOnInit(): void {

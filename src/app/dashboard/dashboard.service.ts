@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { WebApiService } from '../web-api.service';
-import { UserList } from './dashboard.models';
+import { PostComment, UserList } from './dashboard.models';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService extends WebApiService {
@@ -11,7 +11,7 @@ export class DashboardService extends WebApiService {
     return this.baseHttpGetRequest<UserList[]>(apiURL, httpParams);
   }
 
-  getDropdownList<T>(apiURL: string, httpParams?: HttpParams): Observable<T> {
-    return this.baseHttpGetRequest<T>(apiURL, httpParams);
+  getDropdownList(apiURL: string, httpParams?: HttpParams): Observable<PostComment[]> {
+    return this.baseHttpGetRequest<PostComment[]>(apiURL, httpParams);
   }
 }
