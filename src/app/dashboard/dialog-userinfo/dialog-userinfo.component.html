@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>User Address Details - {{userInfo.name}}</h2>
+
+<mat-dialog-content>
+  <p>Below is the Address details of <strong>{{userInfo.name}}</strong></p>
+  <mat-list>
+    <mat-list-item>
+      <span matListItemTitle>Street</span>
+      <span matListItemLine>{{userInfo.address.street}}</span>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>
+      <span matListItemTitle>Suite</span>
+      <span matListItemLine>{{userInfo.address.suite}}</span>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>
+      <span matListItemTitle>City</span>
+      <span matListItemLine>{{userInfo.address.city}}</span>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>
+      <span matListItemTitle>Zipcode</span>
+      <span matListItemLine>{{userInfo.address.zipcode}}</span>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="warn" (click)="close()">Close</button>
+</mat-dialog-actions>

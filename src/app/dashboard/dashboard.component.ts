@@ -2,11 +2,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ANGULAR_MATERIAL_MODULES } from '../shared/angular-material';
 import { DashboardConstants } from './dashboard.constants';
 import { PostComment, UserList } from './dashboard.models';
 import { DashboardService } from './dashboard.service';
+import { DialogUserinfoComponent } from './dialog-userinfo/dialog-userinfo.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +24,7 @@ import { DashboardService } from './dashboard.service';
 export class DashboardComponent implements OnInit {
 
   private dashboardService = inject(DashboardService);
+  private dialog = inject(MatDialog);
 
   public dataSource: UserList[] = [];
   public displayedColumns: string[] = DashboardConstants.displayedColumns;
@@ -56,7 +59,14 @@ export class DashboardComponent implements OnInit {
   }
 
   showDialogBox(item: UserList): void {
-    // Will be implemented when dialog-userinfo component is added
-    console.log('showDialogBox called for =>', item);
+    const dialogRef = this.dialog.open(DialogUserinfoComponent, {
+      height: '400px',
+      width: '600px',
+      data: { userInfo: item }
+    });
+
+    dialogRef.afterClosed().subscribe((result: unknown) => {
+      console.log('Dialog closed, result:', result);
+    });
   }
 }
