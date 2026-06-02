@@ -15,6 +15,18 @@ export const routes: Routes = [
     loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES)
   },
   {
+    path: 'templates',
+    loadChildren: () => import('./templates/templates.routes').then(m => m.TEMPLATES_ROUTES)
+  },
+  {
+    path: 'role',
+    loadChildren: () => import('./role/role.routes').then(m => m.ROLE_ROUTES)
+  },
+  {
+    path: 'restatement',
+    loadChildren: () => import('./restatement/restatement.routes').then(m => m.RESTATEMENT_ROUTES)
+  },
+  {
     path: '**',
     redirectTo: 'dashboard'
   }
