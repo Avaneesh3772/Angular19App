@@ -1,0 +1,43 @@
+.app-container {
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: DodgerBlue;
+    min-height: 500px;
+  }
+  
+  .app-container > div {
+    background-color: #f1f1f1;
+    margin: 10px;
+  }
+  .menu-container {
+    width:20%;
+  }
+  .content-container {
+    width:80%;
+    padding:10px;
+  }
+  .menu-container ul {
+    padding: 0 0 0 25px;
+    margin:0px;
+  }
+  .menu li{
+    padding: 5px 5px 10px 5px;
+    margin:0px;
+  }
+  .menu li a{
+    font-size: 14px;
+    color:blue;
+  }
+  .menu li ul{
+    padding: 10px 0 0px 10px;
+    margin:0px;
+  }
+  .menu li ul li{
+    padding: 5px 5px 5px 5px;
+    margin:0px;
+  }
+  .active {
+    color:blue;
+    font-weight:bold;
+  }
+  

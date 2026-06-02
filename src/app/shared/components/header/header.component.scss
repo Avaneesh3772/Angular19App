@@ -1,0 +1,31 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  min-height: 100px;
+  margin-bottom:10px;
+}
+
+.header-container > div {
+  background-color: #0009;
+  width: 50%;
+  font-size: 30px;
+  color:#fff;
+  padding:0px 30px;
+}
+.header-container .user {
+  text-align: right;
+  padding-top: 21px;
+}
+.header-container h1{
+  font-size: 26px;
+}
+.header-container h2{
+  font-size: 20px;
+}
+.header-container h3{
+  font-size: 14px;
+}
+.material-icons {
+  color:#cdf109;
+}
+

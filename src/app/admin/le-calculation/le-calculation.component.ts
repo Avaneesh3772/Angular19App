@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-le-calculation',
+  standalone: true,
   imports: [],
   templateUrl: './le-calculation.component.html',
   styleUrl: './le-calculation.component.scss'
