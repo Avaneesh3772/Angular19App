@@ -1,0 +1,14 @@
+[
+  { "employeeIdentifier": 101, "roleDescription": "Lorem ipsum dolor sit amet, consectetur", "roleName": "Dashboard Viewer", "roleType": "Dashboard Viewer" },
+  { "employeeIdentifier": 102, "roleDescription": "Nemo enim ipsam voluptatem quia voluptas sit", "roleName": "Administrator", "roleType": "Operations" },
+  { "employeeIdentifier": 103, "roleDescription": "Lorem ipsum dolor sit amet, consectetur", "roleName": "FRR Admin", "roleType": "FRR Approver" },
+  { "employeeIdentifier": 104, "roleDescription": "Nemo enim ipsam voluptatem quia voluptas sit", "roleName": "Canadian Banking", "roleType": "BU Inputter" },
+  { "employeeIdentifier": 105, "roleDescription": "Lorem ipsum dolor sit amet, consectetur", "roleName": "Report Viewer", "roleType": "Report Viewer" },
+  { "employeeIdentifier": 106, "roleDescription": "Ut enim ad minima veniam, quis nostrum exercitationem", "roleName": "Administrator", "roleType": "Operations" },
+  { "employeeIdentifier": 107, "roleDescription": "Lorem ipsum dolor sit amet, consectetur", "roleName": "Capital Market", "roleType": "BU Inputter" },
+  { "employeeIdentifier": 108, "roleDescription": "Sed ut perspiciatis unde omnis iste", "roleName": "Administrator", "roleType": "Operations" },
+  { "employeeIdentifier": 109, "roleDescription": "Ut enim ad minima veniam, quis nostrum exercitationem", "roleName": "GRP0002", "roleType": "Report Viewer" },
+  { "employeeIdentifier": 110, "roleDescription": "Lorem ipsum dolor sit amet, consectetur", "roleName": "Report Viewer", "roleType": "Report Viewer" },
+  { "employeeIdentifier": 111, "roleDescription": "Sed ut perspiciatis unde omnis iste", "roleName": "GRP000", "roleType": "Report Viewer" },
+  { "employeeIdentifier": 112, "roleDescription": "Lorem ipsum dolor sit amet, consectetur", "roleName": "Administrator", "roleType": "Operations" }
+]
