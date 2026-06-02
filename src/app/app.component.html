@@ -5,11 +5,26 @@
   <div class="menu-container">
       <ul class="menu">
         <li><a routerLinkActive="active" [routerLink]="'/dashboard'">Dashboard</a></li>
+        <li><a routerLinkActive="active" [routerLink]="'/templates'">Templates</a></li>
         <li>Admin
           <ul>
             <li><a routerLinkActive="active" [routerLink]="'/admin/close-quarter'">Close Quarter</a></li>
             <li><a routerLinkActive="active" [routerLink]="'/admin/le-calculation'">LE Calculation</a></li>
             <li><a routerLinkActive="active" [routerLink]="'/admin/rounding-model-calculation'">Rounding Model Calculation</a></li>
+          </ul>
+        </li>
+        <li>Role
+          <ul>
+            <li><a routerLinkActive="active" [routerLink]="'/role/role-definition'">Role Definition</a></li>
+            <li><a routerLinkActive="active" [routerLink]="'/role/role-assignment'">Role Assignment</a></li>
+            <li><a routerLinkActive="active" [routerLink]="'/role/role-transfer'">Role Transfer</a></li>
+          </ul>
+        </li>
+        <li>Restatement
+          <ul>
+            <li><a routerLinkActive="active" [routerLink]="'/restatement/initiate-and-define'">Initiate and Define</a></li>
+            <li><a routerLinkActive="active" [routerLink]="'/restatement/track-and-action'">Track and Action</a></li>
+            <li><a routerLinkActive="active" [routerLink]="'/restatement/restated-reports'">Restated Reports</a></li>
           </ul>
         </li>
       </ul>
