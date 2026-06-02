@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/angular-material';
 import { UserList } from '../dashboard.models';
@@ -10,7 +10,7 @@ import { UserList } from '../dashboard.models';
   templateUrl: './dialog-userinfo.component.html',
   styleUrl: './dialog-userinfo.component.scss'
 })
-export class DialogUserinfoComponent {
+export class DialogUserinfoComponent implements OnInit {
 
   private dialogRef = inject(MatDialogRef<DialogUserinfoComponent>);
   public data = inject<{ userInfo: UserList }>(MAT_DIALOG_DATA);
@@ -19,5 +19,8 @@ export class DialogUserinfoComponent {
 
   close(): void {
     this.dialogRef.close();
+  }
+
+   ngOnInit(): void {
   }
 }
