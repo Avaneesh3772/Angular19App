@@ -1,18 +1,13 @@
-<div class="child-to-parent-section">
-  <button mat-raised-button color="accent" (click)="child2ParentMethod()">
-    Child to Parent Data
-  </button>
-</div>
-
 <mat-accordion>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title class="accordion-header">
-        {{ templateName }}
+        {{ templateName }} - Quarterly
         <mat-icon>keyboard_arrow_down</mat-icon>
       </mat-panel-title>
     </mat-expansion-panel-header>
 
+    <div class="cards-container">
     @for (item of quartelyTemplateList(); track item.user) {
       <mat-card class="item-card">
         <mat-card-content>
@@ -40,6 +35,12 @@
         </mat-card-content>
       </mat-card>
     }
+    </div>
 
   </mat-expansion-panel>
 </mat-accordion>
+<div class="child-to-parent-section" style="margin-top:40px">
+  <button mat-raised-button color="accent" (click)="child2ParentMethod()">
+    Child to Parent Data
+  </button>
+</div>
