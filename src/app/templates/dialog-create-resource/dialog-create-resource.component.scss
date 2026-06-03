@@ -9,16 +9,10 @@
     padding-top:5px;
   }
   label {
-    display: inline-block;
+      float: left;
+      width: 56px;
   }
-  input[type="text"], input[type="email"], input[type="tel"]  {
-    width:200px;
-    height:20px;
-    padding:2px;
-    margin-left:20px;
-  }
-  
-  select {
+  input[type="text"], input[type="number"]  {
     width:200px;
     height:20px;
     padding:2px;
@@ -29,15 +23,14 @@
   }
   .redText {
     color:red;
-  }
-  .small {
-    font-size:10px;
+    font-size:11px;
+    margin-left: 75px;
   }
   .message {
     color:green;
     font-size:25px;
   }
-  .radio-buttons label{
-    font-size:13px;
+  button {
+    margin-left:75px;
   }
   

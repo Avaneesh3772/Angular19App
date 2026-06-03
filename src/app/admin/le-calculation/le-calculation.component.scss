@@ -1,0 +1,72 @@
+.form-container {
+    padding:10px;
+  }
+  .smallFont {
+    font-size:11px;
+    padding-left:10px;
+  }
+  .form-container.error input[type=text],
+  .form-container.error input[type=number],
+  .form-container.error input[type=password]
+  {
+    border:solid 1px red;
+  }
+  .form-container .error-messages {
+    padding-left:200px;
+  }
+  .form-container .error-messages p {
+    display:block;
+    padding:2px 0 0 0;
+    margin:0px;
+    font-size:12px;
+    color:red;
+  }
+  .form-flex-container .error-messages p {
+    display:block;
+    padding:2px 0 0 0;
+    margin:0px;
+    font-size:12px;
+    color:red;
+  }
+  .button-row {
+    margin-top:40px;
+  }
+  .button-row button {
+    margin-right: 20px;
+  }
+  fieldset {
+   margin-top:20px;
+  }
+  fieldset legend{
+    font-weight:bold;
+   }
+  label.labelName {
+   display:inline-block;
+   width:200px;
+  }
+  .common-message {
+    color:blue;
+    font-size:12px;
+    padding:10px 0;
+  }
+  .add-button {
+    margin-top:5px;
+  }
+  .delete-button {
+    text-align:right;
+    margin-top:14px;
+  }
+  .form-flex-container {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-bottom:10px;
+  }
+  .flex-items {
+    width:200px;
+  }
+  .flex-items label{
+    padding-bottom:5px;
+  }
+  
+  
+  

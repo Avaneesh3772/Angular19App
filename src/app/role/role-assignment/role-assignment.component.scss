@@ -1,0 +1,32 @@
+.form-container {
+    padding:10px;
+  }
+  .searchBox {
+    border-bottom:solid 1px #ccc;
+    border-top:solid 0px #ccc;
+    border-left:solid 0px #ccc;
+    border-right:solid 0px #ccc;
+    width:300px;
+    height:26px;
+  }
+  .showResults {
+    background: #fff;
+    border: solid 1px #ccc;
+    padding: 10px;
+    display: block;
+    width: 28%;
+    margin-left: 16%;
+    position: relative;
+    bottom: 10px;
+    right: 3px;
+  }
+  .radio-button-container {
+    width:100%;
+    margin:5px;
+    display: block;
+  }
+  .noRecordsFound {
+    color:red;
+    font-size: 15px;
+  }
+  

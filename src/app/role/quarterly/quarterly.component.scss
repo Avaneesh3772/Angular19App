@@ -1,0 +1,30 @@
+/* @import 'src/assets/css/role-mat-card.css'; */
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  .flex-container .template-info{
+    background-color: #f1f1f1;
+    width: 240px;
+    height:auto;
+    margin: 10px 0px;
+    padding:10px;
+    text-align: left;
+    font-size: 14px;
+  }
+  .item-wrapper {
+    padding-bottom: 5px;
+  }
+  .flex-container .template-info label {
+    font-weight: bold;
+    display: inline-block;
+    padding-right: 5px;
+  }
+  .flex-container .template-info .value {
+    display: inline-block;
+  }
+  
