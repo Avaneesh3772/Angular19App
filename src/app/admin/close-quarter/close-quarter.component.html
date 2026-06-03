@@ -1,1 +1,126 @@
-<p>close-quarter works!</p>
+<div class="page-container">
+  <p class="page-title">Close Quarter</p>
+  <p class="page-subtitle">Template Driven Form</p>
+
+  <form #userForm="ngForm" (ngSubmit)="formSubmit()">
+
+    <!-- Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput
+             name="userName"
+             [(ngModel)]="userDetails.userName"
+             #userNameRef="ngModel"
+             required
+             minlength="8"
+             placeholder="Enter your name">
+      @if (userNameRef.invalid && userNameRef.touched) {
+        @if (userNameRef.errors?.['required']) {
+          <mat-error>This field is required</mat-error>
+        }
+        @if (userNameRef.errors?.['minlength']) {
+          <mat-error>Minimum 8 characters required</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput
+             name="userEmail"
+             [(ngModel)]="userDetails.userEmail"
+             #userEmailRef="ngModel"
+             required
+             email
+             placeholder="Enter your email">
+      @if (userEmailRef.invalid && userEmailRef.touched) {
+        @if (userEmailRef.errors?.['required']) {
+          <mat-error>This field is required</mat-error>
+        }
+        @if (userEmailRef.errors?.['email']) {
+          <mat-error>Please enter a valid email</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <!-- Phone -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Phone</mat-label>
+      <input matInput
+             name="userPhone"
+             [(ngModel)]="userDetails.userPhone"
+             #userPhoneRef="ngModel"
+             required
+             pattern="[0-9]{10}"
+             placeholder="Enter 10-digit phone number">
+      @if (userPhoneRef.invalid && userPhoneRef.touched) {
+        @if (userPhoneRef.errors?.['required']) {
+          <mat-error>This field is required</mat-error>
+        }
+        @if (userPhoneRef.errors?.['pattern']) {
+          <mat-error>Please enter 10 digits</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <!-- Topic -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Topic</mat-label>
+      <mat-select name="userTopic"
+                  [(ngModel)]="userDetails.userTopic"
+                  #userTopicRef="ngModel"
+                  required
+                  (ngModelChange)="updateTopic($event)">
+        <mat-option value="">Please select a value</mat-option>
+        @for (topic of topics; track topic) {
+          <mat-option [value]="topic">{{ topic }}</mat-option>
+        }
+      </mat-select>
+      @if (userTopicRef.invalid && userTopicRef.touched) {
+        <mat-error>This field is required</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Time Preference -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Please choose Time</mat-label>
+      <mat-select name="userTimePreference"
+                  [(ngModel)]="userDetails.userTimePreference"
+                  (ngModelChange)="updateTimePreference($event)">
+        @for (time of timePreferences; track time) {
+          <mat-option [value]="time">{{ time }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Subscription Checkbox -->
+    <div class="checkbox-row">
+      <mat-checkbox name="userSubscription"
+                    [(ngModel)]="userDetails.userSubscription"
+                    (ngModelChange)="getFormStatus($event)">
+        Send me promotional offers
+      </mat-checkbox>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="submit-row">
+      <button mat-raised-button color="primary"
+              type="submit"
+              [disabled]="userForm.invalid">
+        Submit
+      </button>
+    </div>
+
+  </form>
+
+  <!-- Success Message -->
+  @if (formSubmitted) {
+    <mat-card class="success-card">
+      <mat-card-content>
+        <p>Your Form has been submitted successfully.</p>
+      </mat-card-content>
+    </mat-card>
+  }
+
+</div>

@@ -1,1 +1,245 @@
-<p>le-calculation works!</p>
+<div class="page-container">
+  <p class="page-title">LE Calculation</p>
+  <p class="page-subtitle">Employee Information - Reactive Form</p>
+
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+
+    <!-- ── User Information ── -->
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="accordion-header">User Information</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <!-- Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="userName" placeholder="Enter name">
+        <mat-hint>{{ charLength }} characters entered</mat-hint>
+        @if (EmpName.invalid && EmpName.touched) {
+          @if (EmpName.errors?.['required']) {
+            <mat-error>This is a required field.</mat-error>
+          }
+          @if (EmpName.errors?.['minlength']) {
+            <mat-error>Minimum 3 characters</mat-error>
+          }
+          @if (EmpName.errors?.['maxlength']) {
+            <mat-error>Maximum 8 characters</mat-error>
+          }
+        }
+      </mat-form-field>
+
+      <!-- Age -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Your Age</mat-label>
+        <input matInput type="number" formControlName="userAge" placeholder="Enter age (18–45)">
+        @if (EmpAge.invalid && EmpAge.touched) {
+          @if (EmpAge.errors?.['required']) {
+            <mat-error>This is a required field.</mat-error>
+          }
+          @if (EmpAge.errors?.['ageMismatch']) {
+            <mat-error>Age should be between 18 and 45.</mat-error>
+          }
+        }
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Enter password">
+        @if (EmpPassword.invalid && EmpPassword.touched) {
+          @if (EmpPassword.errors?.['required']) {
+            <mat-error>This is a required field.</mat-error>
+          }
+        }
+      </mat-form-field>
+
+      <!-- Confirm Password -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" placeholder="Re-enter password">
+        @if (EmpConfirmPassword.invalid && EmpConfirmPassword.touched) {
+          @if (EmpConfirmPassword.errors?.['required']) {
+            <mat-error>This is a required field.</mat-error>
+          }
+        }
+        @if (employeeForm.errors?.['misMatch'] && EmpConfirmPassword.touched) {
+          <mat-error>Password and confirm password should match.</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Joining Date -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Joining Date</mat-label>
+        <input matInput [matDatepicker]="picker"
+               formControlName="joiningDate"
+               [min]="minDate"
+               [max]="maxDate">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if (EmpJoiningDate.invalid && EmpJoiningDate.touched) {
+          @if (EmpJoiningDate.errors?.['required']) {
+            <mat-error>This is a required field.</mat-error>
+          }
+        }
+      </mat-form-field>
+
+      <!-- Account or Portfolio -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Please choose Account</mat-label>
+        <mat-select formControlName="chooseAccoOrPort">
+          @for (item of chooseAccountOrPortfolio; track item) {
+            <mat-option [value]="item">{{ item }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+    </mat-expansion-panel>
+
+    <!-- ── Promotional Offers ── -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="accordion-header">Choose Promotional Offers</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-checkbox formControlName="promotionalOffer">
+        Send me promotional offers
+      </mat-checkbox>
+
+      <!-- Email — enabled only when offers checked -->
+      @if (EmpOffers.value) {
+        <mat-form-field appearance="outline" class="full-width top-gap">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="userEmail" placeholder="Enter email">
+          @if (EmpEmail.invalid && EmpEmail.touched) {
+            @if (EmpEmail.errors?.['required']) {
+              <mat-error>This is a required field.</mat-error>
+            }
+            @if (EmpEmail.errors?.['email']) {
+              <mat-error>This is not a valid email.</mat-error>
+            }
+            @if (EmpEmail.errors?.['pattern']) {
+              <mat-error>This is not a valid pattern.</mat-error>
+            }
+          }
+        </mat-form-field>
+      }
+
+    </mat-expansion-panel>
+
+    <!-- ── Skills ── -->
+    <mat-expansion-panel formGroupName="skills">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="accordion-header">Choose Your Skill</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <!-- Skills input -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Skills</mat-label>
+        <input matInput formControlName="userSkills" placeholder="Enter your skills">
+        @if (EmpSkills.invalid && EmpSkills.touched) {
+          <mat-error>This is a required field.</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Experience -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Experience in Years</mat-label>
+        <input matInput formControlName="userExperience" placeholder="e.g. 3">
+        @if (EmpExperience.invalid && EmpExperience.touched) {
+          @if (EmpExperience.errors?.['required']) {
+            <mat-error>This is a required field.</mat-error>
+          }
+          @if (EmpExperience.errors?.['pattern']) {
+            <mat-error>Please enter only numbers.</mat-error>
+          }
+        }
+      </mat-form-field>
+
+      <!-- Proficiency -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Proficiency</mat-label>
+        <mat-select formControlName="userProficiency">
+          <mat-option value="">Choose your proficiency</mat-option>
+          @for (proficiency of proficiencyList; track proficiency) {
+            <mat-option [value]="proficiency">{{ proficiency }}</mat-option>
+          }
+        </mat-select>
+        @if (EmpProficiency.invalid && EmpProficiency.touched) {
+          <mat-error>This is a required field.</mat-error>
+        }
+      </mat-form-field>
+
+    </mat-expansion-panel>
+
+    <!-- ── Qualification (FormArray) ── -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="accordion-header">Add your qualification</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div formArrayName="qualification">
+        @for (qual of Qualification.controls; track qual; let i = $index) {
+          <div [formGroupName]="i" class="qualification-row">
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Qualification</mat-label>
+              <input matInput formControlName="userQualification" placeholder="e.g. B.Tech">
+              @if (qual.get('userQualification')?.invalid && qual.get('userQualification')?.touched) {
+                @if (qual.get('userQualification')?.errors?.['required']) {
+                  <mat-error>This is a required field.</mat-error>
+                }
+                @if (qual.get('userQualification')?.errors?.['minlength']) {
+                  <mat-error>Minimum 3 characters.</mat-error>
+                }
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Institute / University</mat-label>
+              <input matInput formControlName="userUniversity" placeholder="e.g. IIT Bombay">
+              @if (qual.get('userUniversity')?.invalid && qual.get('userUniversity')?.touched) {
+                @if (qual.get('userUniversity')?.errors?.['required']) {
+                  <mat-error>This is a required field.</mat-error>
+                }
+                @if (qual.get('userUniversity')?.errors?.['minlength']) {
+                  <mat-error>Minimum 5 characters.</mat-error>
+                }
+              }
+            </mat-form-field>
+
+            @if (Qualification.length > 1) {
+              <button mat-stroked-button color="warn" type="button"
+                      (click)="deleteQualification(i)">
+                Delete This Qualification
+              </button>
+            }
+
+            <mat-divider class="qual-divider"></mat-divider>
+          </div>
+        }
+      </div>
+
+      @if (Qualification.length >= 3) {
+        <p class="max-qual-msg">You can add maximum 3 qualifications.</p>
+      }
+
+      @if (Qualification.length < 3) {
+        <button mat-stroked-button color="primary" type="button"
+                (click)="addNewQualification()">
+          Add Another Qualification
+        </button>
+      }
+
+    </mat-expansion-panel>
+
+    <!-- Submit -->
+    <div class="submit-row">
+      <button mat-raised-button color="primary"
+              type="submit"
+              [disabled]="employeeForm.invalid">
+        Submit Form Data
+      </button>
+    </div>
+
+  </form>
+</div>

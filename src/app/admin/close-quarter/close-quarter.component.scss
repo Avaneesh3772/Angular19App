@@ -1,43 +1,23 @@
-.form-control {
-    display:block;
-    padding-top:20px;
-    height:auto;
-    margin-bottom:10px;
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.checkbox-row {
+  margin: 8px 0 16px 0;
+}
+
+.submit-row {
+  margin-bottom: 24px;
+}
+
+.success-card {
+  margin-top: 16px;
+  background-color: #e8f5e9;
+
+  p {
+    color: #2e7d32;
+    font-size: 16px;
+    margin: 0;
   }
-  .form-block {
-    display:block;
-    padding-top:5px;
-  }
-  label {
-    display: inline-block;
-  }
-  input[type="text"], input[type="email"], input[type="tel"]  {
-    width:200px;
-    height:20px;
-    padding:2px;
-    margin-left:20px;
-  }
-  
-  select {
-    width:200px;
-    height:20px;
-    padding:2px;
-    margin-left:20px;
-  }
-  .red {
-    border:solid 1px red;
-  }
-  .redText {
-    color:red;
-  }
-  .small {
-    font-size:10px;
-  }
-  .message {
-    color:green;
-    font-size:25px;
-  }
-  .radio-buttons label{
-    font-size:13px;
-  }
-  
+}
