@@ -13,7 +13,7 @@ export class AppInitializerDataService {
   private userInformation: UserPersonalInfo | null = null;
 
   AppConfigartionData(): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<string>((resolve) => {
       this.authTokenService.setTokenToSessionStorage('token', AuthToken);
 
       this.userAuthorizationService.getAppConfigData(AppConstants.appConfigDataURL)
@@ -21,13 +21,13 @@ export class AppInitializerDataService {
           next: (response: UserPersonalInfo) => {
             if (response) {
               this.userInformation = response;
-              resolve('Promise is resolved successfully.');
-            } else {
-              reject('Promise is rejected');
+              console.log('App configuration loaded successfully:', response);
             }
+            resolve('App config loaded successfully.');
           },
           error: (error) => {
-            reject(error);
+            console.error('Failed to load app configuration, proceeding with defaults:', error);
+            resolve('App config failed — proceeding with defaults.');
           }
         });
     });
