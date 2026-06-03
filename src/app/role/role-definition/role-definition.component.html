@@ -1,1 +1,23 @@
-<p>role-definition works!</p>
+<div class="page-container">
+  <p class="page-title">Role Definition</p>
+
+  @if (displayChild2ParentData) {
+    <mat-card class="child-data-card">
+      <mat-card-content>
+        <p><strong>Name —</strong> {{ displayChild2ParentData.name }}</p>
+        <p><strong>City —</strong> {{ displayChild2ParentData.city }}</p>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (monthlyTemplateList.length > 0) {
+    <app-monthly [monthlyTemplateList]="monthlyTemplateList" />
+  }
+
+  @if (quartelyTemplateList.length > 0) {
+    <app-quarterly
+      [quartelyTemplateList]="quartelyTemplateList"
+      (child2ParentDataTransfer)="printChild2ParentData($event)" />
+  }
+
+</div>

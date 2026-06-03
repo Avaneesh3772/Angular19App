@@ -1,1 +1,39 @@
-<p>monthly works!</p>
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title class="accordion-header">
+        {{ templateName }}
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    @for (item of monthlyTemplateList(); track item.user) {
+      <mat-card class="item-card">
+        <mat-card-content>
+          <div class="info-row">
+            <span class="label">Username —</span>
+            <span class="value">{{ item.user }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Month & Year —</span>
+            <span class="value">{{ item.month | monthName }} {{ item.year }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Status —</span>
+            <span class="circle-icon" [style.background-color]="checkStatus(item.status)"></span>
+            <span class="value">{{ item.status }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Date & Time —</span>
+            <span class="value">{{ dateConvert(item.lastActionDate) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Comments —</span>
+            <span class="value">{{ item.comments }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+  </mat-expansion-panel>
+</mat-accordion>
