@@ -1,5 +1,5 @@
 export class AdminConstants {
-  public static topics = ["Eduction", "Health", "Sports"]
+  public static topics = ["Education", "Health", "Sports"]
   public static timeOptions = ["Morning", "Afternoon", "Evening", "Night"]
   public static accOrPort = ["Account", "Portfolio",]
   public static proficiencyOptions = ["Beginner", "Intermediate", "Good", "Expert"]

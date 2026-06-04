@@ -4,6 +4,7 @@ import { DashboardGuard } from './shared/guards/dashboard.guard';
 import { RestatementGuard } from './shared/guards/restatement.guard';
 import { RoleGuard } from './shared/guards/role.guard';
 import { TemplateGuard } from './shared/guards/template.guard';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'dashboard'
+    component: PageNotFoundComponent
   }
 ];

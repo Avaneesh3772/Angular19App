@@ -12,7 +12,7 @@ export class AppInitializerDataService {
 
   private userInformation: UserPersonalInfo | null = null;
 
-  AppConfigartionData(): Promise<string> {
+  AppConfigurationData(): Promise<string> {
     return new Promise<string>((resolve) => {
       this.authTokenService.setTokenToSessionStorage('token', AuthToken);
 
@@ -33,7 +33,7 @@ export class AppInitializerDataService {
     });
   }
 
-  getAppConfigartionData(): UserPersonalInfo | null {
+  getAppConfigurationData(): UserPersonalInfo | null {
     return this.userInformation;
   }
 }

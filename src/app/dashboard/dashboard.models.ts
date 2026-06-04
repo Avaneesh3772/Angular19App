@@ -27,7 +27,6 @@ export interface Company {
 export interface Geo {
   lat: string;
   lng: string;
-  bs: string
 }
 
 export interface PostComment {

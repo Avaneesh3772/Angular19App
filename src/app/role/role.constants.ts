@@ -6,7 +6,7 @@ export class RoleConstants {
   public static get roleAssignmentUserDataURL(): string {return '/assets/mockData/roleAssignmentList.json'}
 }
 
-export enum frenquencyType  {
+export enum frequencyType {
   monthly = 'monthly',
-  quartely = 'quartely'
+  quarterly = 'quarterly'
 }

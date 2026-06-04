@@ -45,10 +45,17 @@
       </mat-card-content>
     </mat-card>
   } @else {
-    <div class="loading-icon-position">
-      <mat-spinner></mat-spinner>
-      <p>Loading..</p>
-    </div>
+    @if (errorMessage) {
+      <div class="error-message">
+        <mat-icon>error_outline</mat-icon>
+        <p>{{ errorMessage }}</p>
+      </div>
+    } @else {
+      <div class="loading-icon-position">
+        <mat-spinner></mat-spinner>
+        <p>Loading...</p>
+      </div>
+    }
   }
 
   <!-- Topic Dropdown -->

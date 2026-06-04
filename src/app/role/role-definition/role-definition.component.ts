@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject } from '@angular/core';
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/angular-material';
-import { frenquencyType, RoleConstants } from '../role.constants';
+import { frequencyType, RoleConstants } from '../role.constants';
 import { TemplateList } from '../role.models';
 import { RoleService } from '../role.service';
 import { Child2ParentData, QuarterlyComponent } from '../quarterly/quarterly.component';
@@ -19,9 +19,7 @@ export class RoleDefinitionComponent implements OnInit {
   private roleService = inject(RoleService);
 
   public monthlyTemplateList: TemplateList[] = [];
-  public quartelyTemplateList: TemplateList[] = [];
-  public monthlyTemplateListLength: number = 0;
-  public quartelyTemplateListLength: number = 0;
+  public quarterlyTemplateList: TemplateList[] = [];
   public errorMessage: string = '';
   public displayChild2ParentData: Child2ParentData | null = null;
 
@@ -35,14 +33,12 @@ export class RoleDefinitionComponent implements OnInit {
         console.log('roleMockData =>', response);
 
         this.monthlyTemplateList = response.filter(
-          item => item.frequency === frenquencyType.monthly
+          item => item.frequency === frequencyType.monthly
         );
-        this.monthlyTemplateListLength = this.monthlyTemplateList.length;
 
-        this.quartelyTemplateList = response.filter(
-          item => item.frequency === frenquencyType.quartely
+        this.quarterlyTemplateList = response.filter(
+          item => item.frequency === frequencyType.quarterly
         );
-        this.quartelyTemplateListLength = this.quartelyTemplateList.length;
       },
       error: (error: HttpErrorResponse) => {
         this.errorMessage = error.message;

@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpHandlerFn, HttpRequest } from '@angular/common/http';
+import { HttpErrorResponse, HttpHandlerFn, HttpRequest, HttpStatusCode } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, finalize, retry, throwError } from 'rxjs';
 import { AuthTokenService } from '../services/auth-token.service';
@@ -16,17 +16,25 @@ export function authTokenInterceptor(
   });
 
   return next(requestWithAuthToken).pipe(
-    retry(2),
+    // Only retry on server errors (5xx), not on client errors (4xx)
+    retry({
+      count: 2,
+      delay: (error: HttpErrorResponse) => {
+        if (error.status >= HttpStatusCode.InternalServerError) {
+          return [error];
+        }
+        throw error;
+      }
+    }),
 
     catchError((error: HttpErrorResponse) => {
-      console.log('Inside HttpInterceptor Error Object =>', error);
-      alert(`HTTP Error: ${error.message}`);
+      console.error('HTTP Interceptor — request failed:', error.status, error.message);
       return throwError(() => error);
     }),
 
     finalize(() => {
-      const profilingMsg = `Method: ${request.method} | URL: ${request.urlWithParams}`;
-      console.log('Inside HttpInterceptor PROFILING =>', profilingMsg);
+      const profilingMsg = `${request.method} ${request.urlWithParams}`;
+      console.log('HTTP Interceptor — completed:', profilingMsg);
     })
   );
 }

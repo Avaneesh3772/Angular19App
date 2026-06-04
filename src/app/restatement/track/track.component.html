@@ -1,25 +1,36 @@
 <div class="page-container">
-    <p class="page-title">Track</p>
-    @if (getSelectedComment) {
+  <p class="page-title">Track</p>
+
+  @if (getSelectedComment) {
     <h3>
-        Below are the details of <strong>{{ getSelectedComment.email }}</strong>
+      Below are the details of <strong>{{ getSelectedComment.email }}</strong>
     </h3>
     <mat-card class="mat-card-border">
-        <div class="item">
-            PostId:- <span class="value">{{ getSelectedComment.postId }}</span>
-        </div>
-        <div class="item">
-            ID:- <span class="value">{{ getSelectedComment.id }}</span>
-        </div>
-        <div class="item">
-            Name:- <span class="value">{{ getSelectedComment.name }}</span>
-        </div>
-        <div class="item">
-            Email:- <span class="value">{{ getSelectedComment.email }}</span>
-        </div>
-        <div class="item">
-            Comment:- <span class="value">{{ getSelectedComment.body }}</span>
-        </div>
+      <div class="item">
+        PostId:- <span class="value">{{ getSelectedComment.postId }}</span>
+      </div>
+      <div class="item">
+        ID:- <span class="value">{{ getSelectedComment.id }}</span>
+      </div>
+      <div class="item">
+        Name:- <span class="value">{{ getSelectedComment.name }}</span>
+      </div>
+      <div class="item">
+        Email:- <span class="value">{{ getSelectedComment.email }}</span>
+      </div>
+      <div class="item">
+        Comment:- <span class="value">{{ getSelectedComment.body }}</span>
+      </div>
     </mat-card>
-    }
+  } @else if (errorMessage) {
+    <div class="error-message">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+    </div>
+  } @else {
+    <div class="loading-icon-position">
+      <mat-spinner></mat-spinner>
+      <p>Loading...</p>
+    </div>
+  }
 </div>

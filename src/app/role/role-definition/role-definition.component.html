@@ -14,9 +14,9 @@
     <app-monthly [monthlyTemplateList]="monthlyTemplateList" />
   }
 <br><br>
-  @if (quartelyTemplateList.length > 0) {
+  @if (quarterlyTemplateList.length > 0) {
     <app-quarterly
-      [quartelyTemplateList]="quartelyTemplateList"
+      [quartelyTemplateList]="quarterlyTemplateList"
       (child2ParentDataTransfer)="printChild2ParentData($event)" />
   }
 

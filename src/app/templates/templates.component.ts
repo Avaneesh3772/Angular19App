@@ -51,7 +51,7 @@ export class TemplatesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: CreatePostModel | null) => {
       console.log('Dialog result =>', result);
-      if (result && result.title && result.body && result.userId) {
+      if (result && result.title && result.body && result.userId > 0) {
         this.createNewResource(result);
       }
     });

@@ -32,10 +32,17 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
     </table>
-    } @else {  
+    } @else {
+      @if (errorMessage) {
+        <div class="error-message">
+          <mat-icon>error_outline</mat-icon>
+          <p>{{ errorMessage }}</p>
+        </div>
+      } @else {
         <div class="loading-icon-position">
-            <mat-spinner></mat-spinner>
-            <p>Loading..</p>  
-        </div>          
+          <mat-spinner></mat-spinner>
+          <p>Loading...</p>
+        </div>
+      }
     }
 </div>

@@ -26,10 +26,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .dialog-box-container .close-dialog-box {text-align:right;}
 .dialog-box-container .top-position {position: absolute;top:0px; right:0px;}
 .loading-icon-position {margin-left: 45%;margin-top: 30px;}
-.page-container .mat-accordion .accordion-header{background-color:#CCC;font-size:18px;}
-.page-container .mat-accordion .accordion-header:hover{background-color:#DDD;}
-.page-container .mat-accordion .accordion-header:focus{background-color:#CCC;}
-.page-container .mat-accordion .accordion-header:active{background-color:#CCC;}
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c62828;
+  margin-top: 24px;
+  font-size: 15px;
+
+  mat-icon {
+    color: #c62828;
+  }
+}
+.page-container .mat-accordion .accordion-header{font-size:22px;}
 .circle-icon {
   display:inline-block;
   width:10px;

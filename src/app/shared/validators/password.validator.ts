@@ -5,7 +5,7 @@ export function PasswordValidator(control: AbstractControl): ValidationErrors | 
   const confirmPassword = control.get('confirmPassword');
 
   if (password?.value && confirmPassword?.value && password.value !== confirmPassword.value) {
-    return { misMatch: true };
+    return { passwordMismatch: true };
   }
   return null;
 }

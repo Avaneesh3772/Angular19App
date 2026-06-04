@@ -11,7 +11,7 @@ export class DashboardGuard implements CanMatch {
   private appCommonService = inject(AppCommonService);
 
   canMatch(): boolean {
-    const appConfigData = this.appInitializerDataService.getAppConfigartionData();
+    const appConfigData = this.appInitializerDataService.getAppConfigurationData();
     const hasRole = appConfigData?.roles.includes('dashboard') ?? false;
 
     if (hasRole) {

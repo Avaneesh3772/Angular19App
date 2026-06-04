@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export class AuthTokenService {
 
   setTokenToSessionStorage(key: string, value: string): void {
-    sessionStorage.setItem(key, JSON.stringify(value));
+    sessionStorage.setItem(key, value);
   }
 
   getTokenFromSessionStorage(key: string): string | null {

@@ -62,7 +62,7 @@
             <mat-error>This is a required field.</mat-error>
           }
         }
-        @if (employeeForm.errors?.['misMatch'] && EmpConfirmPassword.touched) {
+        @if (employeeForm.errors?.['passwordMismatch'] && EmpConfirmPassword.touched) {
           <mat-error>Password and confirm password should match.</mat-error>
         }
       </mat-form-field>

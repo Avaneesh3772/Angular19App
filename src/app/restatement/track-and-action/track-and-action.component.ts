@@ -3,7 +3,6 @@ import { ANGULAR_MATERIAL_MODULES } from '../../shared/angular-material';
 import { CommentsList } from '../restatement.models';
 import { RestatementConstants } from '../restatement.constants';
 import { RestatementService } from '../restatement.service';
-import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 

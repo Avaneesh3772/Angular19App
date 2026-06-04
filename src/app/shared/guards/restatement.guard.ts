@@ -11,7 +11,7 @@ export class RestatementGuard implements CanMatch {
   private appCommonService = inject(AppCommonService);
 
   canMatch(): boolean {
-    const appConfigData = this.appInitializerDataService.getAppConfigartionData();
+    const appConfigData = this.appInitializerDataService.getAppConfigurationData();
     const hasRole = appConfigData?.roles.includes('restatement') ?? false;
 
     if (hasRole) {
