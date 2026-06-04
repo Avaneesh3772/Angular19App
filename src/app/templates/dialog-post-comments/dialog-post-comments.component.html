@@ -1,13 +1,9 @@
-<div class="dialog-box-container">
-  <div class="close-dialog-box top-position">
-    <button mat-icon-button (click)="closeDialog()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
+<div mat-dialog-title class="dialog-title-row">
+  <span>Comments API — Post ID <strong>{{ rowData.id }}</strong></span>
+  <button mat-icon-button (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
 </div>
-
-<h2 mat-dialog-title>Comments API</h2>
-<p>You clicked on Post ID number <strong>{{ rowData.id }}</strong></p>
 
 <mat-dialog-content>
   @if (userDataLoaded) {

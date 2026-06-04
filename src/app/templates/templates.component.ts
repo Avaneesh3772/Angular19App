@@ -112,8 +112,9 @@ export class TemplatesComponent implements OnInit {
 
   openCommentsDialog(rowData: PostList): void {
     const dialogRef = this.dialog.open(DialogPostCommentsComponent, {
-      height: '500px',
-      width: '800px',
+      height: '600px',
+      width: '900px',
+      maxWidth: '900px',
       data: { rowData }
     });
 

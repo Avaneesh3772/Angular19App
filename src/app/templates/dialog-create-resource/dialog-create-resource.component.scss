@@ -33,4 +33,9 @@
   button {
     margin-left:75px;
   }
-  
+  .create-dialog-content {
+    padding:0 10px 10px 10px;
+    .mat-mdc-form-field {
+      display:flex;
+    }
+  }
