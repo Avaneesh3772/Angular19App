@@ -1,32 +1,33 @@
-.form-container {
-    padding:10px;
+.search-field {
+  width: 400px;
+}
+
+.search-results-card {
+  width: 400px;
+  margin-top: -8px;
+  margin-bottom: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+  .search-result-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:hover {
+      background-color: #e3f2fd;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
   }
-  .searchBox {
-    border-bottom:solid 1px #ccc;
-    border-top:solid 0px #ccc;
-    border-left:solid 0px #ccc;
-    border-right:solid 0px #ccc;
-    width:300px;
-    height:26px;
-  }
-  .showResults {
-    background: #fff;
-    border: solid 1px #ccc;
-    padding: 10px;
-    display: block;
-    width: 28%;
-    margin-left: 16%;
-    position: relative;
-    bottom: 10px;
-    right: 3px;
-  }
-  .radio-button-container {
-    width:100%;
-    margin:5px;
-    display: block;
-  }
-  .noRecordsFound {
-    color:red;
-    font-size: 15px;
-  }
-  
+}
+
+.no-records-msg {
+  color: #f44336;
+  font-size: 14px;
+  margin: 4px 0 16px 4px;
+}
