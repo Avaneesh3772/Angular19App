@@ -31,3 +31,25 @@
   color:#cdf109;
 }
 
+// BehaviorSubject demo banner — shown when RxJS Playground sends a message
+.rxjs-message-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(90deg, #1565c0, #0288d1);
+  color: #fff;
+  padding: 8px 20px;
+  font-size: 14px;
+  animation: slideDown 0.3s ease-out;
+
+  .banner-icon {
+    color: #fff;
+    font-size: 20px;
+  }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+

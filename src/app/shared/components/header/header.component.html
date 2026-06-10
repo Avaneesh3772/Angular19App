@@ -7,3 +7,15 @@
     <h2><span class="material-icons" style="vertical-align: middle;">account_circle</span> Username - Avaneesh Mishra</h2>
   </div>
 </div>
+
+<!-- BehaviorSubject demo banner — appears when a message is sent from the RxJS Playground -->
+@if (headerMessage$ | async; as message) {
+  @if (message) {
+    <div class="rxjs-message-banner">
+      <span class="material-icons banner-icon">notifications_active</span>
+      <span class="banner-text">
+        <strong>BehaviorSubject →</strong> {{ message }}
+      </span>
+    </div>
+  }
+}

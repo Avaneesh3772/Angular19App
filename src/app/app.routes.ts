@@ -38,6 +38,10 @@ export const routes: Routes = [
     loadChildren: () => import('./restatement/restatement.routes').then(m => m.RESTATEMENT_ROUTES)
   },
   {
+    path: 'rxjs-learning',
+    loadChildren: () => import('./rxjs-learning/rxjs-learning.routes').then(m => m.RXJS_LEARNING_ROUTES)
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }
