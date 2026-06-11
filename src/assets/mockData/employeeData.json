@@ -1,0 +1,10 @@
+[
+  { "id": 1, "name": "Avaneesh Mishra",  "department": "Engineering", "role": "Senior Developer",  "salary": 85000, "bonus": 10000, "deductions": 5000, "yearsOfService": 5,  "skills": ["Angular", "TypeScript", "Node.js"] },
+  { "id": 2, "name": "Sarah Thompson",   "department": "Engineering", "role": "Tech Lead",          "salary": 110000,"bonus": 18000, "deductions": 8000, "yearsOfService": 8,  "skills": ["React", "AWS", "Python"] },
+  { "id": 3, "name": "Rahul Sharma",     "department": "Marketing",   "role": "Marketing Manager",  "salary": 72000, "bonus": 9000,  "deductions": 4500, "yearsOfService": 4,  "skills": ["SEO", "Google Ads", "Analytics"] },
+  { "id": 4, "name": "Emily Chen",       "department": "HR",          "role": "HR Business Partner","salary": 65000, "bonus": 7000,  "deductions": 4000, "yearsOfService": 3,  "skills": ["Recruitment", "HRIS", "Compliance"] },
+  { "id": 5, "name": "James Wilson",     "department": "Finance",     "role": "Financial Analyst",  "salary": 78000, "bonus": 12000, "deductions": 6000, "yearsOfService": 6,  "skills": ["Excel", "SAP", "Power BI"] },
+  { "id": 6, "name": "Priya Patel",      "department": "Engineering", "role": "QA Engineer",        "salary": 70000, "bonus": 8000,  "deductions": 4500, "yearsOfService": 3,  "skills": ["Selenium", "JIRA", "Cypress"] },
+  { "id": 7, "name": "Marcus Johnson",   "department": "Marketing",   "role": "Content Strategist", "salary": 60000, "bonus": 6000,  "deductions": 3500, "yearsOfService": 2,  "skills": ["Copywriting", "HubSpot", "Social Media"] },
+  { "id": 8, "name": "Lisa Anderson",    "department": "Finance",     "role": "Payroll Specialist",  "salary": 62000, "bonus": 6500,  "deductions": 3800, "yearsOfService": 4,  "skills": ["QuickBooks", "Payroll", "Tax Compliance"] }
+]

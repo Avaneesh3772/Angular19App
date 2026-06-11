@@ -1,0 +1,281 @@
+// ─── Panel accent borders (left stripe per section) ──────────────────────────
+$s1: #1976d2; $s2: #388e3c; $s3: #f57c00;
+$s4: #7b1fa2; $s5: #0097a7; $s6: #c62828;
+$s7: #4e342e; $s8: #616161;
+
+.signal-panel { margin-bottom: 12px; border-left: 5px solid #ccc; }
+.signal-panel.s1 { border-left-color: $s1; }
+.signal-panel.s2 { border-left-color: $s2; }
+.signal-panel.s3 { border-left-color: $s3; }
+.signal-panel.s4 { border-left-color: $s4; }
+.signal-panel.s5 { border-left-color: $s5; }
+.signal-panel.s6 { border-left-color: $s6; }
+.signal-panel.s7 { border-left-color: $s7; }
+.signal-panel.s8 { border-left-color: $s8; }
+
+// ─── Concept description bar ──────────────────────────────────────────────────
+.concept-bar {
+  font-size: 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  line-height: 1.8;
+  color: #333;
+
+  code {
+    background: #e3f2fd;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: #1565c0;
+  }
+
+  &.warn-bar {
+    background: #fff3e0;
+    border-left: 3px solid #e65100;
+    code { background: #fff8e1; color: #e65100; }
+  }
+}
+
+// ─── Two-column demo grid ──────────────────────────────────────────────────────
+.demo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.demo-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.hint-text {
+  font-size: 12px;
+  color: #888;
+  margin: 6px 0;
+  font-style: italic;
+}
+
+// ─── Section 1: Shopping Cart ────────────────────────────────────────────────
+.product-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.product-name     { flex: 1; font-size: 13px; }
+.product-category { font-size: 11px; color: #888; background: #f5f5f5; padding: 2px 6px; border-radius: 10px; }
+.product-price    { font-weight: 600; color: #1976d2; min-width: 40px; text-align: right; }
+
+.cart-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.cart-name  { flex: 1; font-size: 13px; }
+.cart-price { font-weight: 600; color: #388e3c; min-width: 50px; text-align: right; }
+.qty-controls { display: flex; align-items: center; gap: 2px; }
+.qty-value { min-width: 20px; text-align: center; font-weight: bold; }
+
+.cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0 6px;
+  font-size: 15px;
+}
+
+.empty-msg { color: #aaa; font-style: italic; font-size: 13px; padding: 10px 0; }
+
+// ─── Signal value display box ─────────────────────────────────────────────────
+.signal-value-display {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  margin-top: 12px;
+  line-height: 1.8;
+  color: #1a1a1a;
+
+  &.s1-bg { background: #e3f2fd; border-left: 3px solid $s1; }
+  &.s6-bg { background: #fce4ec; border-left: 3px solid $s6; }
+}
+
+// ─── Section 2: Salary Calculator ────────────────────────────────────────────
+.salary-inputs { display: flex; flex-direction: column; gap: 16px; }
+.salary-input-row {
+  label { display: block; font-size: 13px; margin-bottom: 6px; color: #555; }
+}
+.range-input { width: 100%; cursor: pointer; accent-color: #1976d2; }
+
+.salary-results { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.salary-card {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #f9f9f9;
+  border-left: 3px solid #ccc;
+
+  .salary-label { font-size: 12px; color: #777; }
+  .salary-value { font-size: 18px; font-weight: 700; color: #333; }
+  .salary-note  { font-size: 10px; color: #aaa; font-style: italic; }
+
+  &.bonus  { border-left-color: #66bb6a; background: #f1f8f1; .salary-value { color: #388e3c; } }
+  &.gross  { border-left-color: #42a5f5; background: #e8f4fd; .salary-value { color: #1976d2; } }
+  &.tax    { border-left-color: #ef5350; background: #fff0f0; .salary-value { color: #c62828; } }
+  &.deduct { border-left-color: #ff7043; background: #fff3ef; .salary-value { color: #bf360c; } }
+  &.net    { border-left-color: #26a69a; background: #e0f2f1; grid-column: 1 / -1;
+             .net-value { font-size: 24px; color: #00796b; } }
+}
+
+// ─── Section 3: Effect ───────────────────────────────────────────────────────
+.pref-row { display: flex; align-items: center; gap: 12px; }
+.pref-label { font-weight: 600; min-width: 60px; }
+
+.theme-preview-box {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 6px;
+  border: 2px solid #e0e0e0;
+  background: #fafafa;
+  color: #333;
+  transition: all 0.3s ease;
+
+  &.dark-preview {
+    background: #1e1e1e;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+}
+
+.effect-log-box {
+  background: #1e1e1e;
+  color: #a5d6a7;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.7;
+  padding: 10px 12px;
+  border-radius: 4px;
+  min-height: 80px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.effect-log-line { border-bottom: 1px solid #2a2a2a; padding: 1px 0; }
+.placeholder { color: #555; font-style: italic; }
+
+// ─── Section 4: Doctors ──────────────────────────────────────────────────────
+.doctor-card {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 8px;
+
+  &.unavailable { opacity: 0.55; }
+}
+.doctor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.doctor-name   { font-weight: 600; font-size: 14px; }
+.doctor-details { display: flex; gap: 12px; font-size: 12px; color: #555; margin-bottom: 4px; }
+
+// ─── Section 5: Employee Search ──────────────────────────────────────────────
+.search-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 2px solid #0097a7;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  outline: none;
+  box-sizing: border-box;
+
+  &:focus { border-color: #00838f; }
+}
+
+// ─── Section 6: linkedSignal ──────────────────────────────────────────────────
+.dept-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.full-width   { width: 100%; }
+
+.comparison-note { margin-top: 16px; }
+.mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  th { background: #c62828; color: #fff; padding: 6px 10px; text-align: left; }
+  td { padding: 5px 10px; border-bottom: 1px solid #f0f0f0; }
+  tr:hover td { background: #fce4ec; }
+}
+
+// ─── Section 7: resource() / Artist Gallery ───────────────────────────────────
+.genre-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+
+.resource-status {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+  background: #f5f5f5;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+  color: #555;
+
+  .status-active { color: #e65100; font-weight: bold; }
+}
+
+.artist-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.artist-card {
+  mat-card-title { font-size: 14px; }
+  mat-card-subtitle { font-size: 12px; }
+  p { font-size: 12px; margin: 4px 0; }
+}
+
+// ─── Section 8: mutate() ─────────────────────────────────────────────────────
+.mutate-demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.code-compare { display: flex; flex-direction: column; }
+.code-label   { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+.bad-label    { color: #c62828; }
+.good-label   { color: #2e7d32; }
+
+.code-block {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.7;
+  padding: 12px;
+  border-radius: 4px;
+  margin: 0;
+  white-space: pre;
+  overflow-x: auto;
+  flex: 1;
+
+  &.bad-code  { background: #ffebee; color: #b71c1c; border: 1px solid #ffcdd2; }
+  &.good-code { background: #e8f5e9; color: #1b5e20; border: 1px solid #c8e6c9; }
+}
+
+.key-rule-box {
+  margin-top: 16px;
+  background: #fff3e0;
+  border-left: 4px solid #f57c00;
+  padding: 12px 16px;
+  border-radius: 0 4px 4px 0;
+  font-size: 13px;
+  color: #4e342e;
+}
+
+// ─── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 900px) {
+  .demo-grid, .salary-results, .mutate-demo-grid, .artist-grid {
+    grid-template-columns: 1fr;
+  }
+}

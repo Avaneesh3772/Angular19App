@@ -1,0 +1,10 @@
+[
+  { "id": 1, "name": "Leonardo da Vinci",  "genre": "Renaissance",    "nationality": "Italian",   "famousWork": "Mona Lisa",            "birthYear": 1452 },
+  { "id": 2, "name": "Michelangelo",        "genre": "Renaissance",    "nationality": "Italian",   "famousWork": "The Sistine Chapel",    "birthYear": 1475 },
+  { "id": 3, "name": "Claude Monet",        "genre": "Impressionism",  "nationality": "French",    "famousWork": "Water Lilies",          "birthYear": 1840 },
+  { "id": 4, "name": "Pierre-Auguste Renoir","genre": "Impressionism", "nationality": "French",    "famousWork": "Luncheon of the Boating Party", "birthYear": 1841 },
+  { "id": 5, "name": "Pablo Picasso",       "genre": "Modernism",      "nationality": "Spanish",   "famousWork": "Guernica",              "birthYear": 1881 },
+  { "id": 6, "name": "Salvador Dali",       "genre": "Modernism",      "nationality": "Spanish",   "famousWork": "The Persistence of Memory", "birthYear": 1904 },
+  { "id": 7, "name": "Johann S. Bach",      "genre": "Baroque",        "nationality": "German",    "famousWork": "Brandenburg Concertos", "birthYear": 1685 },
+  { "id": 8, "name": "Rembrandt van Rijn",  "genre": "Baroque",        "nationality": "Dutch",     "famousWork": "The Night Watch",       "birthYear": 1606 }
+]

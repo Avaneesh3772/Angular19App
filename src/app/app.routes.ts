@@ -42,6 +42,10 @@ export const routes: Routes = [
     loadChildren: () => import('./rxjs-learning/rxjs-learning.routes').then(m => m.RXJS_LEARNING_ROUTES)
   },
   {
+    path: 'signals-learning',
+    loadChildren: () => import('./signals-learning/signals-learning.routes').then(m => m.SIGNALS_LEARNING_ROUTES)
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }

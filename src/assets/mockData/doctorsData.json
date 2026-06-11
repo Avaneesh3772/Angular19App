@@ -1,0 +1,10 @@
+[
+  { "id": 1, "name": "Dr. Sarah Johnson",  "specialty": "Cardiology",     "available": true,  "rating": 4.8, "experience": 12, "nextAvailable": "2026-06-12", "fee": 150 },
+  { "id": 2, "name": "Dr. Raj Mehta",      "specialty": "Neurology",       "available": false, "rating": 4.9, "experience": 18, "nextAvailable": "2026-06-15", "fee": 200 },
+  { "id": 3, "name": "Dr. Emily Carter",   "specialty": "Cardiology",      "available": true,  "rating": 4.6, "experience": 8,  "nextAvailable": "2026-06-11", "fee": 130 },
+  { "id": 4, "name": "Dr. Michael Brown",  "specialty": "Orthopedics",     "available": true,  "rating": 4.7, "experience": 15, "nextAvailable": "2026-06-13", "fee": 175 },
+  { "id": 5, "name": "Dr. Anita Kapoor",   "specialty": "Dermatology",     "available": false, "rating": 4.5, "experience": 10, "nextAvailable": "2026-06-18", "fee": 120 },
+  { "id": 6, "name": "Dr. James Lee",      "specialty": "Neurology",       "available": true,  "rating": 4.8, "experience": 20, "nextAvailable": "2026-06-14", "fee": 220 },
+  { "id": 7, "name": "Dr. Priya Singh",    "specialty": "Dermatology",     "available": true,  "rating": 4.4, "experience": 6,  "nextAvailable": "2026-06-12", "fee": 110 },
+  { "id": 8, "name": "Dr. Robert Clarke",  "specialty": "Orthopedics",     "available": false, "rating": 4.9, "experience": 22, "nextAvailable": "2026-06-20", "fee": 190 }
+]
