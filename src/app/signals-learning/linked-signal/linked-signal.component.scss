@@ -1,0 +1,64 @@
+.new-badge {
+  font-size: 14px;
+  background: #1976d2;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  vertical-align: middle;
+}
+
+.comparison-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  .comparison-card {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: 2px solid #ddd;
+    font-size: 13px;
+
+    &.linked { border-color: #1976d2; background: #e3f2fd; }
+
+    .comparison-label { font-weight: 700; margin-bottom: 8px; font-size: 13px; }
+    ul { margin: 0; padding-left: 16px; li { margin: 4px 0; } }
+  }
+}
+
+.dept-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.employee-display {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 6px;
+  background: #e3f2fd;
+
+  .emp-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #1976d2;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .emp-name   { font-size: 16px; font-weight: 700; }
+  .emp-role   { font-size: 13px; color: #555; }
+  .emp-dept   { font-size: 12px; color: #1976d2; font-weight: 600; }
+  .emp-salary { font-size: 13px; color: #388e3c; font-weight: 600; margin-top: 4px; }
+}

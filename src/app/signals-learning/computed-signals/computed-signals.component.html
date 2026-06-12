@@ -1,0 +1,91 @@
+<div class="page-container">
+  <p class="page-title">computed()</p>
+  <p class="page-subtitle">💰 Salary Calculator — all values derive automatically from 4 inputs</p>
+
+  <div class="concept-bar">
+    <code>netSalary = computed(() => gross() - tax() - deductions())</code> —
+    computed() is <strong>read-only</strong> and <strong>lazy</strong>: it only recalculates
+    when one of the signals it reads has changed. Angular caches the result until then.
+  </div>
+
+  <div class="demo-grid">
+
+    <!-- Left: Sliders (writable signals) -->
+    <mat-card>
+      <mat-card-header><mat-card-title>Input Signals (Sliders)</mat-card-title></mat-card-header>
+      <mat-card-content>
+
+        <div class="slider-row">
+          <label>Base Salary: <strong>${{ baseSalary() | number }}</strong></label>
+          <input class="range-input" type="range" min="20000" max="200000" step="1000"
+                 [value]="baseSalary()" (input)="onBaseSalaryChange($event)">
+          <div class="hint-text">Range: $20,000 – $200,000</div>
+        </div>
+
+        <div class="slider-row">
+          <label>Bonus %: <strong>{{ bonusPercent() }}%</strong></label>
+          <input class="range-input" type="range" min="0" max="50" step="1"
+                 [value]="bonusPercent()" (input)="onBonusChange($event)">
+          <div class="hint-text">Range: 0% – 50%</div>
+        </div>
+
+        <div class="slider-row">
+          <label>Tax %: <strong>{{ taxPercent() }}%</strong></label>
+          <input class="range-input" type="range" min="0" max="40" step="1"
+                 [value]="taxPercent()" (input)="onTaxChange($event)">
+          <div class="hint-text">Range: 0% – 40%</div>
+        </div>
+
+        <div class="slider-row">
+          <label>Deductions %: <strong>{{ deductPercent() }}%</strong></label>
+          <input class="range-input" type="range" min="0" max="20" step="1"
+                 [value]="deductPercent()" (input)="onDeductChange($event)">
+          <div class="hint-text">Range: 0% – 20%</div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Right: Computed results -->
+    <mat-card>
+      <mat-card-header><mat-card-title>Computed Signals (Auto-updated)</mat-card-title></mat-card-header>
+      <mat-card-content>
+
+        <div class="salary-row base">
+          <span>Base Salary</span>
+          <span>${{ baseSalary() | number }}</span>
+        </div>
+        <div class="salary-row bonus">
+          <span>+ Bonus ({{ bonusPercent() }}%)</span>
+          <span>+ ${{ bonusAmount() | number }}</span>
+        </div>
+        <div class="salary-row gross">
+          <span>= Gross Salary</span>
+          <span>${{ grossSalary() | number }}</span>
+        </div>
+        <hr>
+        <div class="salary-row deduct">
+          <span>– Tax ({{ taxPercent() }}% of gross)</span>
+          <span>– ${{ taxAmount() | number }}</span>
+        </div>
+        <div class="salary-row deduct">
+          <span>– Deductions ({{ deductPercent() }}% of base)</span>
+          <span>– ${{ deductionAmount() | number }}</span>
+        </div>
+        <hr>
+        <div class="salary-row net">
+          <span>🎯 Net Salary</span>
+          <span>${{ netSalary() | number }}</span>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <div class="concept-bar warn-bar" style="margin-top:16px">
+    <strong>computed() vs signal()</strong>: You cannot call <code>.set()</code> or <code>.update()</code>
+    on a computed signal — it is always derived. If you need a signal that is derived but
+    can also be manually overridden, use <code>linkedSignal()</code> instead.
+  </div>
+</div>

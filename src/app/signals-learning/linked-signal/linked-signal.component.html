@@ -1,0 +1,97 @@
+<div class="page-container">
+  <p class="page-title">linkedSignal() <span class="new-badge">Angular 19 New</span></p>
+  <p class="page-subtitle">🏢 Department Selector — writable derived signal that auto-resets</p>
+
+  <div class="concept-bar">
+    <code>linkedSignal(() => derive from source)</code> — like <code>computed()</code> but <strong>writable</strong>.
+    When source signals change → it resets to the derived value.
+    When manually <code>.set()</code> → stays overridden until source changes again.
+  </div>
+
+  <div class="comparison-row">
+    <div class="comparison-card">
+      <div class="comparison-label">computed()</div>
+      <ul>
+        <li>Read-only — cannot call .set()</li>
+        <li>Always reflects derived value</li>
+        <li>Use for pure derived state</li>
+      </ul>
+    </div>
+    <div class="comparison-card linked">
+      <div class="comparison-label">linkedSignal() ← this demo</div>
+      <ul>
+        <li>Writable — supports .set() and .update()</li>
+        <li>Derives initial value from source signals</li>
+        <li>Resets to derived value when sources change</li>
+        <li>Override stays until source changes</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="demo-grid">
+
+    <!-- Left: Controls -->
+    <mat-card>
+      <mat-card-header><mat-card-title>1. Select Department</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <div class="dept-buttons">
+          @for (dept of departmentList(); track dept) {
+            <button mat-raised-button
+              [color]="selectedDepartment() === dept ? 'primary' : ''"
+              (click)="onDepartmentChange(dept)">
+              {{ dept }}
+            </button>
+          }
+        </div>
+
+        <p class="demo-label" style="margin-top:20px">2. Override Employee (optional)</p>
+        <mat-form-field appearance="outline" style="width:100%">
+          <mat-label>Choose employee in {{ selectedDepartment() }}</mat-label>
+          <mat-select [value]="linkedEmployee()?.id" (selectionChange)="onEmployeeManualSelect($event.value)">
+            @for (emp of employeesInDept(); track emp.id) {
+              <mat-option [value]="emp.id">{{ emp.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <p class="hint-text">Selecting a different department will auto-reset this selection</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Right: Selected employee card -->
+    <mat-card>
+      <mat-card-header><mat-card-title>linkedEmployee() — current value</mat-card-title></mat-card-header>
+      <mat-card-content>
+        @if (linkedEmployee()) {
+          <div class="employee-display">
+            <div class="emp-avatar">{{ linkedEmployee()!.name[0] }}</div>
+            <div class="emp-info">
+              <div class="emp-name">{{ linkedEmployee()!.name }}</div>
+              <div class="emp-role">{{ linkedEmployee()!.role }}</div>
+              <div class="emp-dept">{{ linkedEmployee()!.department }}</div>
+              <div class="emp-salary">Salary: ${{ linkedEmployee()!.salary }}</div>
+            </div>
+          </div>
+        }
+        @if (!linkedEmployee()) {
+          <p class="empty-state">No employee selected</p>
+        }
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- Event log -->
+  <mat-card style="margin-top:16px">
+    <mat-card-header><mat-card-title>Event Log</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <div class="effect-log-box">
+        @if (linkedSignalLog.length === 0) {
+          <div class="placeholder">Interact above to see events…</div>
+        }
+        @for (entry of linkedSignalLog; track entry) {
+          <div class="effect-log-line">{{ entry }}</div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

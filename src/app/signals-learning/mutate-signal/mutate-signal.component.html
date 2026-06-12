@@ -1,0 +1,107 @@
+<div class="page-container">
+  <p class="page-title">mutate() — Removed in Angular 17+</p>
+  <p class="page-subtitle">📖 Why it was removed & how to migrate to update()</p>
+
+  <div class="concept-bar warn-bar">
+    <strong>Breaking change (Angular 17):</strong> <code>signal.mutate()</code> was removed.
+    It allowed in-place mutation of signal values (arrays, objects) without creating a new reference.
+    This broke Angular's change detection which relies on reference equality.
+  </div>
+
+  <!-- Side-by-side comparison -->
+  <div class="demo-grid">
+
+    <!-- Old way -->
+    <mat-card class="code-card old-way">
+      <mat-card-header>
+        <mat-card-title>❌ Old way — mutate() (Angular 16)</mat-card-title>
+        <mat-card-subtitle>Mutates array in-place — change detection may miss this</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <pre class="code-block">
+items = signal(['Apple', 'Banana']);
+
+// mutate() — modifies the SAME array reference
+// Angular may NOT detect this change reliably
+this.items.mutate(arr => &#123;
+  arr.push('Mango');      // ← in-place push
+&#125;);</pre>
+        <div class="verdict bad">
+          <mat-icon>cancel</mat-icon>
+          Removed — unreliable change detection, confusing semantics
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- New way -->
+    <mat-card class="code-card new-way">
+      <mat-card-header>
+        <mat-card-title>✅ New way — update() (Angular 17+)</mat-card-title>
+        <mat-card-subtitle>Returns a NEW array reference — change detection works perfectly</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <pre class="code-block">
+items = signal(['Apple', 'Banana']);
+
+// update() — returns a NEW array (spread operator)
+// Angular ALWAYS detects the new reference
+this.items.update(arr => [
+  ...arr,         // copy existing items
+  'Mango'         // ← add new item
+]);</pre>
+        <div class="verdict good">
+          <mat-icon>check_circle</mat-icon>
+          Correct — immutable update pattern, predictable change detection
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- More examples -->
+  <mat-card style="margin-top: 20px">
+    <mat-card-header><mat-card-title>Common migration patterns</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <table class="patterns-table">
+        <thead>
+          <tr>
+            <th>Operation</th>
+            <th>❌ Old mutate() pattern</th>
+            <th>✅ New update() pattern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Add to array</td>
+            <td><code>signal.mutate(a => a.push(x))</code></td>
+            <td><code>signal.update(a => [...a, x])</code></td>
+          </tr>
+          <tr>
+            <td>Remove from array</td>
+            <td><code>signal.mutate(a => a.splice(i, 1))</code></td>
+            <td><code>signal.update(a => a.filter(i => i !== x))</code></td>
+          </tr>
+          <tr>
+            <td>Update object property</td>
+            <td><code>signal.mutate(o => o.name = 'New')</code></td>
+            <td><code>signal.update(o => (&#123;...o, name: 'New'&#125;))</code></td>
+          </tr>
+          <tr>
+            <td>Update item in array</td>
+            <td><code>signal.mutate(a => a[0].qty++)</code></td>
+            <td><code>signal.update(a => a.map(i => i.id === id ? &#123;...i, qty: i.qty+1&#125; : i))</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="key-rule-box">
+    <mat-icon>lightbulb</mat-icon>
+    <div>
+      <strong>Golden Rule:</strong> Signals use <strong>reference equality</strong> to detect changes.
+      Always return a <em>new</em> object or array reference from <code>update()</code> —
+      never modify the existing value in-place.
+    </div>
+  </div>
+</div>

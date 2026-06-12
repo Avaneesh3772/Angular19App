@@ -1,0 +1,78 @@
+<div class="page-container">
+  <p class="page-title">effect()</p>
+  <p class="page-subtitle">🎨 Theme & Font Preferences — run side effects when signals change</p>
+
+  <div class="concept-bar">
+    <code>effect(() =&gt; &#123; ... &#125;)</code> — runs <strong>immediately</strong> on creation, then
+    <strong>re-runs automatically</strong> whenever any signal it reads changes.
+    Use for side effects: localStorage, DOM updates, logging, analytics — never for
+    computing values (use <code>computed()</code> for that).
+  </div>
+
+  <div class="demo-grid">
+
+    <!-- Left: Controls -->
+    <mat-card>
+      <mat-card-header><mat-card-title>Preference Controls</mat-card-title></mat-card-header>
+      <mat-card-content>
+
+        <div class="pref-row">
+          <p class="demo-label">Theme</p>
+          <mat-button-toggle-group
+            [value]="selectedTheme()"
+            (change)="selectedTheme.set($event.value)">
+            <mat-button-toggle value="light">☀️ Light</mat-button-toggle>
+            <mat-button-toggle value="dark">🌙 Dark</mat-button-toggle>
+          </mat-button-toggle-group>
+          <p class="hint-text">Changing theme triggers effect() → saves to localStorage</p>
+        </div>
+
+        <div class="pref-row">
+          <p class="demo-label">Font Size: <strong>{{ fontSize() }}px</strong></p>
+          <input class="range-input" type="range" min="10" max="24" step="1"
+                 [value]="fontSize()" (input)="fontSize.set(+($any($event.target).value))">
+          <p class="hint-text">Drag slider → effect() fires → localStorage updated</p>
+        </div>
+
+        <!-- Live preview box -->
+        <div class="theme-preview-box"
+             [class.dark-theme]="selectedTheme() === 'dark'"
+             [style.fontSize.px]="fontSize()">
+          <strong>Preview:</strong> This text uses your current preferences.
+          <div class="hint-text" style="margin-top:8px">
+            Theme: {{ selectedTheme() }} | Font: {{ fontSize() }}px
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Right: Effect log -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>effect() Side-Effect Log</mat-card-title>
+        <mat-card-subtitle>Each entry = one effect() execution</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="effect-log-box">
+          @if (effectLog().length === 0) {
+            <div class="placeholder">effect() runs immediately on page load…</div>
+          }
+          @for (log of effectLog(); track log) {
+            <div class="effect-log-line">{{ log }}</div>
+          }
+        </div>
+        <button mat-stroked-button (click)="clearEffectLog()" style="margin-top:10px">
+          Clear Log → effectLog.set([])
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <div class="concept-bar warn-bar" style="margin-top:16px">
+    <strong>Warning:</strong> Do not write to signals inside <code>effect()</code> without
+    <code>allowSignalWrites: true</code>. Even then, be careful — writing to a signal that
+    the same effect reads will cause an infinite loop.
+  </div>
+</div>

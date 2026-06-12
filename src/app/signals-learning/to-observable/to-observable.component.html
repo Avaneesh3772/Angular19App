@@ -1,0 +1,56 @@
+<div class="page-container">
+  <p class="page-title">toObservable()</p>
+  <p class="page-subtitle">🔍 Employee Search — Signal → RxJS Pipeline → Signal</p>
+
+  <div class="concept-bar">
+    <code>toObservable(signal)</code> converts a Signal into an Observable so you can apply
+    RxJS operators. Then <code>toSignal(observable$)</code> converts the result back.
+    Full flow: <code>Signal → Observable → debounce + switchMap → Signal</code>
+  </div>
+
+  <!-- Flow diagram -->
+  <div class="flow-diagram">
+    <div class="flow-step signal-step">employeeSearchTerm<br><small>signal()</small></div>
+    <mat-icon class="flow-arrow">arrow_forward</mat-icon>
+    <div class="flow-step rx-step">toObservable()<br><small>Observable</small></div>
+    <mat-icon class="flow-arrow">arrow_forward</mat-icon>
+    <div class="flow-step rx-step">debounceTime(400)<br>+ switchMap<br><small>RxJS operators</small></div>
+    <mat-icon class="flow-arrow">arrow_forward</mat-icon>
+    <div class="flow-step signal-step">employeeSearchResults<br><small>signal()</small></div>
+  </div>
+
+  <!-- Search input -->
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search employees (name / department / role)</mat-label>
+    <input matInput (input)="onEmployeeSearch($event)" placeholder="Type at least 2 characters…">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+  <p class="hint-text">Results appear after 400ms debounce — try "eng", "anna", "design"</p>
+
+  @if (employeeSearchResults().length === 0 && employeeSearchTerm().length >= 2) {
+    <p class="empty-state">No employees match "{{ employeeSearchTerm() }}"</p>
+  }
+
+  @if (employeeSearchResults().length > 0) {
+    <table mat-table [dataSource]="employeeSearchResults()" class="app-table">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef class="app-table-row">Name</th>
+        <td mat-cell *matCellDef="let e">{{ e.name }}</td>
+      </ng-container>
+      <ng-container matColumnDef="department">
+        <th mat-header-cell *matHeaderCellDef class="app-table-row">Department</th>
+        <td mat-cell *matCellDef="let e">{{ e.department }}</td>
+      </ng-container>
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef class="app-table-row">Role</th>
+        <td mat-cell *matCellDef="let e">{{ e.role }}</td>
+      </ng-container>
+      <ng-container matColumnDef="salary">
+        <th mat-header-cell *matHeaderCellDef class="app-table-row">Salary</th>
+        <td mat-cell *matCellDef="let e">${{ e.salary | number }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="app-table-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="app-table-row"></tr>
+    </table>
+  }
+</div>

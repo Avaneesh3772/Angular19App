@@ -1,0 +1,76 @@
+<div class="page-container">
+  <p class="page-title">resource() <span class="new-badge">Angular 19 New</span></p>
+  <p class="page-subtitle">🎵 Artist Gallery — reactive async loading with built-in state signals</p>
+
+  <div class="concept-bar">
+    <code>resource(&#123; request, loader &#125;)</code> — declarative async data loading.
+    Exposes <code>.value()</code>, <code>.isLoading()</code>, <code>.error()</code>, <code>.reload()</code> as built-in signals.
+    Re-runs <code>loader</code> automatically whenever <code>request()</code> changes.
+    Cancels in-flight requests via <code>AbortSignal</code>.
+  </div>
+
+  <!-- Built-in signals display -->
+  <div class="resource-status">
+    <div class="status-item" [class.active]="artistResource.isLoading()">
+      <mat-icon>hourglass_empty</mat-icon>
+      isLoading() = {{ artistResource.isLoading() }}
+    </div>
+    <div class="status-item error" [class.active]="artistResource.error()">
+      <mat-icon>error</mat-icon>
+      error() = {{ artistResource.error() ?? 'null' }}
+    </div>
+    <div class="status-item success" [class.active]="!artistResource.isLoading() && !artistResource.error()">
+      <mat-icon>check_circle</mat-icon>
+      value().length = {{ artistResource.value()?.length ?? 0 }}
+    </div>
+  </div>
+
+  <!-- Genre filter -->
+  <div class="genre-filter">
+    @for (genre of genreList(); track genre) {
+      <button mat-stroked-button
+        [color]="selectedArtistGenre() === genre ? 'primary' : ''"
+        (click)="selectedArtistGenre.set(genre)">
+        {{ genre }}
+      </button>
+    }
+    <button mat-icon-button (click)="artistResource.reload()" matTooltip="Reload (artistResource.reload())">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+
+  <!-- Loading state -->
+  @if (artistResource.isLoading()) {
+    <div style="display:flex; align-items:center; gap:12px; margin:20px 0">
+      <mat-spinner diameter="30"></mat-spinner>
+      <span>Loading artists… (700ms artificial delay to show isLoading() state)</span>
+    </div>
+  }
+
+  <!-- Error state -->
+  @if (artistResource.error()) {
+    <div class="error-message">
+      <mat-icon>error</mat-icon> {{ artistResource.error() }}
+    </div>
+  }
+
+  <!-- Artist grid -->
+  @if (!artistResource.isLoading() && artistResource.value()) {
+    <div class="artist-grid">
+      @for (artist of artistResource.value()!; track artist.id) {
+        <mat-card class="artist-card">
+          <mat-card-header>
+            <div class="artist-avatar">{{ artist.name[0] }}</div>
+            <mat-card-title>{{ artist.name }}</mat-card-title>
+            <mat-card-subtitle>{{ artist.genre }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="artist-detail"><mat-icon>palette</mat-icon> {{ artist.famousWork }}</div>
+            <div class="artist-detail"><mat-icon>public</mat-icon> {{ artist.nationality }}</div>
+            <div class="artist-detail"><mat-icon>cake</mat-icon> Born {{ artist.birthYear }}</div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

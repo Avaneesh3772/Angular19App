@@ -1,0 +1,59 @@
+<div class="page-container">
+  <p class="page-title">toSignal()</p>
+  <p class="page-subtitle">🏥 Doctor Directory — use HTTP Observables as Signals</p>
+
+  <div class="concept-bar">
+    <code>doctors = toSignal(this.service.getDoctors(), &#123; initialValue: [] &#125;)</code> —
+    converts an Observable into a read-only Signal.
+    Auto-unsubscribes when the component is destroyed.
+    <code>initialValue</code> is returned until the first emission arrives.
+  </div>
+
+  <!-- Specialty filter -->
+  <div class="filter-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Filter by Specialty</mat-label>
+      <mat-select [value]="selectedSpecialty()" (selectionChange)="selectedSpecialty.set($event.value)">
+        @for (spec of specialties(); track spec) {
+          <mat-option [value]="spec">{{ spec }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <span class="hint-text" style="margin-left:12px">
+      Showing {{ filteredDoctors().length }} of {{ doctors().length }} doctors
+    </span>
+  </div>
+
+  @if (doctors().length === 0) {
+    <mat-spinner diameter="40" style="margin:20px auto"></mat-spinner>
+  }
+
+  <div class="doctor-grid">
+    @for (doc of filteredDoctors(); track doc.id) {
+      <mat-card class="doctor-card">
+        <mat-card-header>
+          <div class="doctor-avatar">{{ doc.name[0] }}</div>
+          <mat-card-title>{{ doc.name }}</mat-card-title>
+          <mat-card-subtitle>{{ doc.specialty }}</mat-card-subtitle>
+        </mat-card-header>
+          <mat-card-content>
+            <div class="doctor-detail"><mat-icon>star</mat-icon> {{ doc.rating }}/5</div>
+            <div class="doctor-detail"><mat-icon>work_history</mat-icon> {{ doc.experience }} yrs experience</div>
+            <div class="doctor-detail"><mat-icon>payments</mat-icon> Fee: ${{ doc.fee }}</div>
+            <div class="doctor-detail">
+              <mat-icon>circle</mat-icon>
+              <span [style.color]="doc.available ? 'green' : 'red'">
+                {{ doc.available ? 'Available' : 'Unavailable' }}
+              </span>
+            </div>
+          </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  <div class="concept-bar warn-bar" style="margin-top: 16px">
+    <strong>toSignal() vs async pipe:</strong> Both work but <code>toSignal()</code> is better
+    with Angular 19 Signals because it integrates directly with <code>computed()</code>
+    and <code>effect()</code> without needing the template at all.
+  </div>
+</div>

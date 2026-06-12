@@ -1,0 +1,22 @@
+.slider-row {
+  margin-bottom: 18px;
+  label { display: block; font-size: 13px; margin-bottom: 6px; }
+}
+
+.salary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  span:last-child { font-weight: 600; font-family: 'Courier New', monospace; }
+
+  &.base   { background: #e3f2fd; }
+  &.bonus  { background: #e8f5e9; }
+  &.gross  { background: #e1f5fe; font-weight: 700; }
+  &.deduct { background: #fff3e0; }
+  &.net    { background: #1976d2; color: white; font-size: 16px; font-weight: 700; border-radius: 6px; }
+}
+
+hr { border: none; border-top: 2px dashed #ccc; margin: 8px 0; }

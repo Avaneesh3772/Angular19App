@@ -1,0 +1,90 @@
+<div class="page-container">
+  <p class="page-title">signal() + set() + update()</p>
+  <p class="page-subtitle">🛒 Shopping Cart — core signal read/write operations</p>
+
+  <div class="concept-bar">
+    <code>count = signal(0)</code> — declare &nbsp;|&nbsp;
+    <code>count()</code> — read &nbsp;|&nbsp;
+    <code>count.set(5)</code> — replace value &nbsp;|&nbsp;
+    <code>count.update(v => v + 1)</code> — derive from current value
+  </div>
+
+  <div class="demo-grid">
+
+    <!-- Left: Product Catalog -->
+    <div>
+      <p class="demo-label">Product Catalog &nbsp;<small>(productCatalog signal)</small></p>
+      @for (product of productCatalog(); track product.id) {
+        <div class="product-row">
+          <span class="product-name">{{ product.name }}</span>
+          <mat-chip>{{ product.category }}</mat-chip>
+          <span class="product-price">${{ product.price }}</span>
+          <button mat-mini-fab color="primary" (click)="addToCart(product)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Right: Cart -->
+    <div>
+      <p class="demo-label">
+        Shopping Cart
+        @if (cartItemCount() > 0) {
+          <mat-chip color="warn" highlighted>{{ cartItemCount() }} item(s)</mat-chip>
+        }
+      </p>
+
+      @if (cartItems().length === 0) {
+        <p class="empty-state">Cart is empty — click + to add products</p>
+      }
+
+      @for (item of cartItems(); track item.id) {
+        <div class="cart-row">
+          <span class="cart-name">{{ item.name }}</span>
+          <div class="qty-controls">
+            <button mat-icon-button (click)="decrementQty(item.id)"><mat-icon>remove</mat-icon></button>
+            <span class="qty-badge">{{ item.qty }}</span>
+            <button mat-icon-button (click)="addToCart(item)"><mat-icon>add</mat-icon></button>
+          </div>
+          <span class="cart-price">${{ item.price * item.qty }}</span>
+          <button mat-icon-button color="warn" (click)="removeFromCart(item.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+
+      @if (cartItems().length > 0) {
+        <div class="cart-footer">
+          <strong>Total: ${{ cartTotal() }}</strong>
+          <button mat-stroked-button color="warn" (click)="clearCart()">
+            🗑️ clearCart() → set([])
+          </button>
+        </div>
+      }
+
+      <!-- Live signal values display -->
+      <div class="signal-value-display blue-bg" style="margin-top:16px">
+        <div><strong>Signal values right now:</strong></div>
+        <div>cartItems().length = {{ cartItems().length }}</div>
+        <div>cartItemCount() = {{ cartItemCount() }} &nbsp;<em>(computed)</em></div>
+        <div>cartTotal() = ${{ cartTotal() }} &nbsp;<em>(computed)</em></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Key rules -->
+  <mat-card class="rules-card">
+    <mat-card-header><mat-card-title>Key Rules</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <table class="rules-table">
+        <tr><th>Operation</th><th>Method</th><th>When to use</th></tr>
+        <tr><td>Read value</td><td><code>signal()</code></td><td>Always — call it like a function</td></tr>
+        <tr><td>Replace entire value</td><td><code>.set(newValue)</code></td><td>When you already have the new value (e.g. clearCart → <code>set([])</code>)</td></tr>
+        <tr><td>Derive from old value</td><td><code>.update(old => new)</code></td><td>When new value depends on old (e.g. increment, add to array)</td></tr>
+        <tr><td>Read-only derived</td><td><code>computed()</code></td><td>Values that are always calculated from other signals</td></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

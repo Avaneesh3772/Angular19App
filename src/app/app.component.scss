@@ -23,13 +23,18 @@
   .menu li{
     padding: 3px 5px 4px 5px;
     margin:0px;
+    font-size: 13px;
   }
   .menu li a{
-    font-size: 14px;
+    font-size: 13px;
     color:blue;
+    text-decoration: none;
+  }
+   .menu li a:hover{
+    color:#c33200;
   }
   .menu li ul{
-    padding: 4px 0 0px 10px;
+    padding: 1px 0 0px 10px;
     margin:0px;
   }
   .menu li ul li{

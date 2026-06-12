@@ -1,0 +1,18 @@
+.pref-row {
+  margin-bottom: 20px;
+}
+
+.theme-preview-box {
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  transition: background 0.3s, color 0.3s;
+  margin-top: 12px;
+
+  &.dark-theme {
+    background: #212121;
+    color: #e0e0e0;
+    border-color: #444;
+  }
+}

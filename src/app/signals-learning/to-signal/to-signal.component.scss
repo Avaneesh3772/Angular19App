@@ -1,0 +1,36 @@
+.filter-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.doctor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.doctor-card {
+  .doctor-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1976d2;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+  }
+  .doctor-detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin: 5px 0;
+    mat-icon { font-size: 16px; height: 16px; width: 16px; color: #666; }
+  }
+}
