@@ -1,6 +1,5 @@
 <div class="page-container">
-  <p class="page-title">Signals Learning</p>
-  <p class="page-subtitle">Angular 19 Signals — 8 Practical Demos</p>
+  <p class="page-title">Angular 19 Signals — 8 Practical Demos</p>
 
   <mat-accordion multi>
 
@@ -9,21 +8,14 @@
     ══════════════════════════════════════════════════════════════════ -->
     <mat-expansion-panel class="signal-panel s1" expanded>
       <mat-expansion-panel-header>
-        <mat-panel-title>1. signal() &nbsp;+&nbsp; set() &nbsp;+&nbsp; update()</mat-panel-title>
+        <mat-panel-title>1. signal() set()  update()</mat-panel-title>
         <mat-panel-description>🛒 Shopping Cart — core signal read/write operations</mat-panel-description>
       </mat-expansion-panel-header>
-
-      <div class="concept-bar">
-        <code>count = signal(0)</code> &nbsp;|&nbsp;
-        <code>count.set(5)</code> — replace value &nbsp;|&nbsp;
-        <code>count.update(v => v + 1)</code> — derive from current value &nbsp;|&nbsp;
-        <code>count()</code> — read (call it like a function)
-      </div>
 
       <div class="demo-grid">
         <!-- Product List -->
         <div>
-          <p class="demo-label">Product Catalog</p>
+          <p class="demo-label">PRODUCT CATALOG</p>
           @for (product of productCatalog(); track product.id) {
             <div class="product-row">
               <span class="product-name">{{ product.name }}</span>
@@ -39,10 +31,7 @@
         <!-- Cart -->
         <div>
           <p class="demo-label">
-            Cart
-            <mat-badge [matBadge]="cartItemCount()" matBadgeColor="warn" matBadgeSize="small">
-              &nbsp;&nbsp;&nbsp;
-            </mat-badge>
+            CART
           </p>
 
           @if (cartItems().length === 0) {
@@ -362,7 +351,7 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Select Employee (manual override)</mat-label>
             <mat-select [value]="linkedEmployee()?.id"
-                        (selectionChange)="onEmployeeManualSelect(employeesInDept()[$any($event.value) - 1] ?? employeesInDept()[0])">
+                        (selectionChange)="onEmployeeManualSelect($event.value)">
               @for (emp of employeesInDept(); track emp.id) {
                 <mat-option [value]="emp.id">{{ emp.name }} — {{ emp.role }}</mat-option>
               }

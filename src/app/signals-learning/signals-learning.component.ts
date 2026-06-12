@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, computed, effect, inject, linkedSignal, OnDestroy, OnInit, resource, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -10,7 +11,7 @@ import { SignalsLearningService } from './signals-learning.service';
 @Component({
   selector: 'app-signals-learning',
   standalone: true,
-  imports: [...ANGULAR_MATERIAL_MODULES, ReactiveFormsModule],
+  imports: [...ANGULAR_MATERIAL_MODULES, ReactiveFormsModule, DecimalPipe],
   templateUrl: './signals-learning.component.html',
   styleUrl: './signals-learning.component.scss'
 })
@@ -238,7 +239,9 @@ export class SignalsLearningComponent implements OnInit, OnDestroy {
     this.linkedSignalLog.push(`🏢 Department changed to "${dept}" → employee auto-reset by linkedSignal`);
   }
 
-  onEmployeeManualSelect(emp: EmployeeItem): void {
+  onEmployeeManualSelect(empId: number): void {
+    const emp = this.employeesInDept().find(e => e.id === empId);
+    if (!emp) return;
     // Manually override the linkedSignal — it accepts .set() like any writable signal
     this.linkedEmployee.set(emp);
     this.linkedSignalLog.push(`👤 Manually selected: "${emp.name}" (override stays until dept changes again)`);

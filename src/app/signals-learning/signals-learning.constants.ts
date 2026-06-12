@@ -8,10 +8,10 @@ export class SignalsConstants {
 }
 
 // Shared data arrays (same as RxJS module — reused for signals demos)
-export const colorsList  = ['Red', 'Blue', 'Orange', 'Pink', 'Green', 'Yellow'];
-export const cityList    = ['Delhi', 'London', 'Toronto', 'New York', 'Tokyo', 'Paris'];
-export const ageList     = [30, 10, 5, 20, 40, 50];
-export const fruitsList  = ['Apple', 'Banana', 'Mango', 'Grape', 'Watermelon', 'Pineapple'];
+export const colorsList:string[]  = ['Red', 'Blue', 'Orange', 'Pink', 'Green', 'Yellow'];
+export const cityList:string[]    = ['Delhi', 'London', 'Toronto', 'New York', 'Tokyo', 'Paris'];
+export const ageList:number[]     = [30, 10, 5, 20, 40, 50];
+export const fruitsList:string[]  = ['Apple', 'Banana', 'Mango', 'Grape', 'Watermelon', 'Pineapple'];
 
 export const usersList = [
   { name: 'Aditya',   age: 35, eligibility: true,  country: 'India'  },
