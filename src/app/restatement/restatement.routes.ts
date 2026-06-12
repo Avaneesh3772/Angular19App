@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { InitiateAndDefineComponent } from './initiate-and-define/initiate-and-define.component';
-import { RestatedReportsComponent } from './restated-reports/restated-reports.component';
 import { TrackAndActionComponent } from './track-and-action/track-and-action.component';
 import { TrackComponent } from './track/track.component';
 
@@ -24,10 +23,5 @@ export const RESTATEMENT_ROUTES: Routes = [
     path: 'track/:id',
     component: TrackComponent,
     data: { title: 'Track' }
-  },
-  {
-    path: 'restated-reports',
-    component: RestatedReportsComponent,
-    data: { title: 'Restated Reports' }
   }
 ];
