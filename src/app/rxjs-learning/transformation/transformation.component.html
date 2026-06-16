@@ -1,96 +1,237 @@
 <div class="page-container">
-  <p class="page-title">Transformation Operators</p>
-  <p class="page-subtitle">🔄 map(), mergeMap(), concatMap(), switchMap() — reshape and flatten streams</p>
+  <p class="page-title">map() · mergeMap() · concatMap() · switchMap()</p>
+  <p class="page-subtitle">📦 E-Commerce Order Fulfillment Hub — transform &amp; flatten streams</p>
 
-  <div class="concept-bar">
-    <code>map</code> transforms values &nbsp;|&nbsp;
-    <code>mergeMap</code> parallel inner streams &nbsp;|&nbsp;
-    <code>concatMap</code> sequential inner streams &nbsp;|&nbsp;
-    <code>switchMap</code> cancels previous inner stream
+  <div class="concept-bar exercise-intro">
+    <p><strong>Problem:</strong> An online store must enrich orders, fetch customer data, fulfil shipments in order, and support live order lookup — each task needs a different flattening strategy.</p>
+    <p><strong>What we built:</strong> An order hub loading from <code>ordersData.json</code>. Each accordion demonstrates one transformation operator with a real workflow and visible timing.</p>
+    <p><strong>map()</strong> — transforms each order 1-to-1 (add shipping cost, grand total, ETA). No inner Observable.</p>
+    <p><strong>mergeMap()</strong> — fires 3 JSONPlaceholder user requests in parallel; faster responses arrive first.</p>
+    <p><strong>concatMap()</strong> — runs 3 fulfilment steps per order; the next order waits until the current one finishes all steps.</p>
+    <p><strong>switchMap()</strong> — live order search; typing a new term cancels the previous in-flight lookup.</p>
   </div>
 
-  <div class="rxjs-operators-grid">
+  @if (isLoadingOrders) {
+    <div class="loading-row">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Loading orders from ordersData.json…</span>
+    </div>
+  } @else {
 
-    <mat-card class="rxjs-operator-card">
+    <!-- map() — always visible starter section -->
+    <mat-card class="operator-card map-card">
       <mat-card-header>
-        <mat-card-title><code>map()</code></mat-card-title>
-        <mat-card-subtitle>Pension calculator — transform ageList into eligibility scores</mat-card-subtitle>
+        <mat-card-title><code>map()</code> — Enrich order summaries</mat-card-title>
+        <mat-card-subtitle>1 value in → 1 transformed value out · from ordersData.json</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <button mat-raised-button color="primary" (click)="runMap()">Run map(age => pensionScore)</button>
-        <div class="rxjs-output-box">
-          @for (line of mapOutput; track $index) { <div>{{ line }}</div> }
-          @if (!mapOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
+        <p class="panel-desc">
+          Raw orders only have <code>total</code> and <code>priority</code>.
+          <code>map()</code> adds shipping, grand total, and delivery ETA — synchronously, one order at a time.
+        </p>
+        <div class="action-row">
+          <button mat-raised-button color="primary" (click)="runMap()" [disabled]="mapRunning">
+            @if (mapRunning) { <mat-spinner diameter="20"></mat-spinner> }
+            @else { Run map() }
+          </button>
+          <button mat-stroked-button (click)="clearMap()">Clear</button>
         </div>
-      </mat-card-content>
-    </mat-card>
 
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>mergeMap()</code></mat-card-title>
-        <mat-card-subtitle>Parallel todo fetch for 3 users — JSONPlaceholder /todos</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <button mat-raised-button color="primary" (click)="runMergeMap()">Run mergeMap (parallel)</button>
-        <div class="rxjs-output-box">
-          @for (line of mergeMapOutput; track $index) { <div>{{ line }}</div> }
-          @if (!mergeMapOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>concatMap()</code></mat-card-title>
-        <mat-card-subtitle>Sequential load — adminMockData.json first, then roleMockData.json</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <button mat-raised-button color="primary" (click)="runConcatMap()">Run concatMap (sequential)</button>
-        <div class="rxjs-output-box">
-          @for (line of concatMapOutput; track $index) { <div>{{ line }}</div> }
-          @if (!concatMapOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>switchMap()</code></mat-card-title>
-        <mat-card-subtitle>Live doctor search — doctorsData.json with 500ms delay (cancellation demo)</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Search doctors by name or specialty</mat-label>
-          <input matInput [formControl]="doctorSearchControl" placeholder="Try: Cardio, then Cardiology...">
-        </mat-form-field>
-        <button mat-stroked-button (click)="clearSwitchMap()">Clear</button>
-        <div class="rxjs-output-box">
-          @for (line of switchMapOutput; track $index) { <div>{{ line }}</div> }
-          @if (!switchMapOutput.length) { <div class="rxjs-placeholder">Type to trigger switchMap...</div> }
-        </div>
-        @if (switchMapResults.length) {
-          <div class="rxjs-result-list">
-            @for (doc of switchMapResults; track doc.id) {
-              <div class="rxjs-result-item">🩺 {{ doc.name }} — {{ doc.specialty }} (⭐ {{ doc.rating }})</div>
+        @if (mapSummaries.length) {
+          <table class="data-table">
+            <tr>
+              <th>Order</th><th>Customer</th><th>Items</th><th>Shipping</th><th>Grand Total</th><th>ETA</th>
+            </tr>
+            @for (s of mapSummaries; track s.orderId) {
+              <tr>
+                <td>{{ s.orderId }}</td>
+                <td>{{ s.customer }}</td>
+                <td>{{ s.itemCount }}</td>
+                <td>${{ s.shipping | number:'1.2-2' }}</td>
+                <td><strong>${{ s.grandTotal | number:'1.2-2' }}</strong></td>
+                <td>{{ s.eta }}</td>
+              </tr>
             }
+          </table>
+        }
+
+        @if (mapLog.length) {
+          <div class="stream-log">
+            @for (line of mapLog; track $index) { <div class="log-line">{{ line }}</div> }
           </div>
         }
       </mat-card-content>
     </mat-card>
 
-  </div>
+    <!-- Flattening operators — one accordion panel each -->
+    <mat-accordion class="operator-accordion" multi>
 
-  <mat-card class="rxjs-comparison-card">
-    <mat-card-header>
-      <mat-card-title>mergeMap vs concatMap vs switchMap</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <table class="rxjs-comparison-table">
-        <tr><th>Operator</th><th>Concurrency</th><th>Cancels previous?</th><th>Real-world use</th></tr>
-        <tr><td><code>mergeMap</code></td><td>Parallel</td><td>No</td><td>Parallel API calls, upload multiple files</td></tr>
-        <tr><td><code>concatMap</code></td><td>Sequential</td><td>No (queued)</td><td>Ordered saves, pagination chains</td></tr>
-        <tr><td><code>switchMap</code></td><td>Latest only</td><td>Yes</td><td>Search boxes, route param changes</td></tr>
-      </table>
-    </mat-card-content>
-  </mat-card>
+      <!-- mergeMap -->
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title><code>mergeMap()</code> — Parallel customer lookup</mat-panel-title>
+          <mat-panel-description>JSONPlaceholder · users 1, 2, 3 fire at once</mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <p class="panel-desc">
+          When a batch order arrives, fetch all 3 customer profiles simultaneously.
+          User 2 (300 ms) finishes before User 3 (600 ms) before User 1 (1000 ms) — results arrive <strong>out of order</strong>.
+        </p>
+        <div class="action-row">
+          <button mat-raised-button color="primary" (click)="runMergeMap()" [disabled]="mergeMapRunning">
+            @if (mergeMapRunning) { <mat-spinner diameter="20"></mat-spinner> }
+            @else { Run mergeMap() }
+          </button>
+          <button mat-stroked-button (click)="clearMergeMap()">Clear</button>
+        </div>
+
+        @if (mergeMapResults.length) {
+          <div class="result-cards">
+            @for (r of mergeMapResults; track r.userId) {
+              <div class="result-card merge-card">
+                <span class="result-badge">#{{ r.userId }}</span>
+                <strong>{{ r.name }}</strong>
+                <span class="result-meta">{{ r.email }}</span>
+                <span class="timing-chip">⏱ {{ r.delayMs }}ms · arrived {{ r.arrivedAt }}</span>
+              </div>
+            }
+          </div>
+        }
+
+        @if (mergeMapLog.length) {
+          <div class="stream-log">
+            @for (line of mergeMapLog; track $index) { <div class="log-line">{{ line }}</div> }
+          </div>
+        }
+      </mat-expansion-panel>
+
+      <!-- concatMap -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title><code>concatMap()</code> — Sequential fulfilment</mat-panel-title>
+          <mat-panel-description>3 orders × 3 steps · strict queue</mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <p class="panel-desc">
+          Warehouse rules: each order must complete <em>Validate payment → Pack warehouse → Create shipping label</em>
+          before the next order starts. <code>concatMap()</code> queues inner streams — never overlaps.
+        </p>
+        <div class="action-row">
+          <button mat-raised-button color="primary" (click)="runConcatMap()" [disabled]="concatMapRunning">
+            @if (concatMapRunning) { <mat-spinner diameter="20"></mat-spinner> }
+            @else { Run concatMap() }
+          </button>
+          <button mat-stroked-button (click)="clearConcatMap()">Clear</button>
+        </div>
+
+        @if (concatCurrentOrder) {
+          <div class="phase-badge phase-active">
+            concatMap() — processing {{ concatCurrentOrder }}…
+          </div>
+        }
+
+        @if (concatMapSteps.length) {
+          <div class="timeline">
+            @for (step of concatMapSteps; track $index) {
+              <div class="timeline-step" [class.active]="step.orderId === concatCurrentOrder">
+                <mat-icon>check_circle</mat-icon>
+                <span><strong>{{ step.orderId }}</strong> — step {{ step.stepIndex }}/{{ step.totalSteps }}: {{ step.step }}</span>
+              </div>
+            }
+          </div>
+        }
+
+        @if (concatMapLog.length) {
+          <div class="stream-log">
+            @for (line of concatMapLog; track $index) { <div class="log-line">{{ line }}</div> }
+          </div>
+        }
+      </mat-expansion-panel>
+
+      <!-- switchMap -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title><code>switchMap()</code> — Live order search</mat-panel-title>
+          <mat-panel-description>Type fast · previous request cancelled</mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <p class="panel-desc">
+          Support desk searches orders by customer name or order ID.
+          Each keystroke (after debounce) starts a new lookup; <code>switchMap()</code> cancels the previous 600 ms simulated HTTP call.
+          Try typing <em>Avaneesh</em>, then quickly change to <em>Sarah</em>.
+        </p>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Search orders by customer or ID</mat-label>
+          <input matInput [formControl]="orderSearchControl" placeholder="Try: Avaneesh, ORD-102, Sarah…">
+          <mat-hint>
+            @if (isSearchPending) { debounceTime(400) — waiting… }
+            @else { switchMap() + 600ms simulated HTTP delay }
+          </mat-hint>
+        </mat-form-field>
+
+        <div class="action-row">
+          <button mat-stroked-button (click)="clearSwitchMap()">Clear search</button>
+        </div>
+
+        @if (switchMapRunning) {
+          <div class="phase-badge phase-search">switchMap() — request in flight…</div>
+        }
+
+        @if (switchMapResults.length) {
+          <div class="result-cards">
+            @for (order of switchMapResults; track order.id) {
+              <div class="result-card">
+                <strong>{{ order.id }}</strong> — {{ order.customer }}
+                <span class="result-meta">{{ order.items }} items · ${{ order.total }} · {{ order.priority }}</span>
+              </div>
+            }
+          </div>
+        } @else if (orderSearchControl.value.trim() && !switchMapRunning && !isSearchPending) {
+          <p class="no-results">No orders match "{{ orderSearchControl.value }}".</p>
+        }
+
+        @if (switchMapLog.length) {
+          <div class="stream-log">
+            @for (line of switchMapLog; track $index) { <div class="log-line">{{ line }}</div> }
+          </div>
+        }
+      </mat-expansion-panel>
+
+    </mat-accordion>
+
+    <mat-card class="rules-card">
+      <mat-card-header><mat-card-title>When to use each transformation operator</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <table class="rules-table">
+          <tr><th>Operator</th><th>Inner streams</th><th>Cancels previous?</th><th>In this order hub</th></tr>
+          <tr>
+            <td><code>map()</code></td>
+            <td>None (not a flattener)</td>
+            <td>—</td>
+            <td>Add shipping &amp; ETA to each order — simple 1-to-1 transform</td>
+          </tr>
+          <tr>
+            <td><code>mergeMap()</code></td>
+            <td>All run in parallel</td>
+            <td>No</td>
+            <td>Fetch 3 customer profiles at once — fastest response wins</td>
+          </tr>
+          <tr>
+            <td><code>concatMap()</code></td>
+            <td>One at a time, queued</td>
+            <td>No (waits in queue)</td>
+            <td>Fulfil orders strictly in sequence — 3 steps per order</td>
+          </tr>
+          <tr>
+            <td><code>switchMap()</code></td>
+            <td>Latest only</td>
+            <td>Yes</td>
+            <td>Live order search — only the most recent query matters</td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+  }
 </div>

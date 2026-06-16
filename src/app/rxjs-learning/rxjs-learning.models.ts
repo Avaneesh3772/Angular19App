@@ -50,6 +50,24 @@ export interface EmployeeItem {
   skills: string[];
 }
 
+export interface OrderItem {
+  id: string;
+  customer: string;
+  items: number;
+  total: number;
+  priority: 'standard' | 'express';
+  status: string;
+}
+
+export interface OrderSummary {
+  orderId: string;
+  customer: string;
+  itemCount: number;
+  shipping: number;
+  grandTotal: number;
+  eta: string;
+}
+
 export interface ArtistItem {
   id: number;
   name: string;

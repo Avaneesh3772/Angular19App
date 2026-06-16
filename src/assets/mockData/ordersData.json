@@ -1,0 +1,8 @@
+[
+  { "id": "ORD-101", "customer": "Avaneesh Mishra",  "items": 3, "total": 149.99, "priority": "express",  "status": "pending" },
+  { "id": "ORD-102", "customer": "Sarah Thompson",   "items": 1, "total": 59.00,  "priority": "standard", "status": "pending" },
+  { "id": "ORD-103", "customer": "Rahul Sharma",     "items": 2, "total": 89.50,  "priority": "standard", "status": "pending" },
+  { "id": "ORD-104", "customer": "Emily Chen",       "items": 4, "total": 210.00, "priority": "express",  "status": "pending" },
+  { "id": "ORD-105", "customer": "James Wilson",     "items": 1, "total": 34.99,  "priority": "standard", "status": "pending" },
+  { "id": "ORD-106", "customer": "Priya Patel",      "items": 2, "total": 72.00,  "priority": "express",  "status": "pending" }
+]

@@ -1,131 +1,353 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
-  concatMap, debounceTime, delay, distinctUntilChanged,
-  from, map, mergeMap, of, Subscription, switchMap,
+  concatMap,
+  debounceTime,
+  delay,
+  distinctUntilChanged,
+  from,
+  map,
+  mergeMap,
+  of,
+  Subscription,
+  switchMap,
+  tap,
 } from 'rxjs';
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/angular-material';
-import { ageList } from '../rxjs-learning.constants';
-import { ApiTodo, DoctorItem } from '../rxjs-learning.models';
+import { ApiUser, OrderItem, OrderSummary } from '../rxjs-learning.models';
 import { RxjsLearningService } from '../rxjs-learning.service';
 
+const LOG = '[Transformation RxJS]';
+
+interface MergeMapResult {
+  userId: number;
+  name: string;
+  email: string;
+  arrivedAt: string;
+  delayMs: number;
+}
+
+interface ConcatMapStep {
+  orderId: string;
+  customer: string;
+  step: string;
+  stepIndex: number;
+  totalSteps: number;
+}
+
+/** Simulated network latency per JSONPlaceholder user — mergeMap finishes out of order */
+const MERGE_MAP_DELAYS: Record<number, number> = { 1: 1000, 2: 300, 3: 600 };
+
+const FULFILLMENT_STEPS = ['Validate payment', 'Pack warehouse', 'Create shipping label'] as const;
+
 /**
- * TRANSFORMATION OPERATORS — map(), mergeMap(), concatMap(), switchMap()
+ * TRANSFORMATION OPERATORS — E-Commerce Order Fulfillment Hub
  *
- * Scenario: Data pipeline — salary calc, parallel todos, sequential templates, live doctor search.
+ * map()       → enrich raw orders with shipping & grand total
+ * mergeMap()  → fetch 3 customer profiles from JSONPlaceholder in PARALLEL
+ * concatMap() → process each order through 3 fulfillment steps SEQUENTIALLY
+ * switchMap() → live order lookup; cancels stale searches while typing
  */
 @Component({
   selector: 'app-rxjs-transformation',
   standalone: true,
-  imports: [...ANGULAR_MATERIAL_MODULES, ReactiveFormsModule],
+  imports: [...ANGULAR_MATERIAL_MODULES, ReactiveFormsModule, DecimalPipe],
   templateUrl: './transformation.component.html',
+  styleUrl: './transformation.component.scss',
 })
 export class TransformationComponent implements OnInit, OnDestroy {
 
   private rxjsService = inject(RxjsLearningService);
+  private cdr = inject(ChangeDetectorRef);
   private subscriptions = new Subscription();
 
-  doctorSearchControl = new FormControl('');
+  orderSearchControl = new FormControl('', { nonNullable: true });
 
-  mapOutput: string[] = [];
-  mergeMapOutput: string[] = [];
-  concatMapOutput: string[] = [];
-  switchMapOutput: string[] = [];
-  switchMapResults: DoctorItem[] = [];
+  orders: OrderItem[] = [];
+  isLoadingOrders = true;
+
+  // map()
+  mapRunning = false;
+  mapSummaries: OrderSummary[] = [];
+  mapLog: string[] = [];
+
+  // mergeMap()
+  mergeMapRunning = false;
+  mergeMapResults: MergeMapResult[] = [];
+  mergeMapLog: string[] = [];
+
+  // concatMap()
+  concatMapRunning = false;
+  concatMapSteps: ConcatMapStep[] = [];
+  concatMapLog: string[] = [];
+  concatCurrentOrder: string | null = null;
+
+  // switchMap()
+  switchMapRunning = false;
+  switchMapResults: OrderItem[] = [];
+  switchMapLog: string[] = [];
   switchMapCallCount = 0;
+  isSearchPending = false;
 
   ngOnInit(): void {
-    this.setupDoctorSearch();
+    console.log(`${LOG} ngOnInit → loading orders from ordersData.json`);
+    this.rxjsService.getOrders().subscribe({
+      next: data => {
+        this.orders = data;
+        this.isLoadingOrders = false;
+        console.log(`${LOG} Orders loaded:`, data);
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        this.isLoadingOrders = false;
+        console.error(`${LOG} Failed to load orders:`, err);
+        this.cdr.detectChanges();
+      },
+    });
+
+    this.setupOrderSearch();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    console.log(`${LOG} ngOnDestroy → unsubscribed`);
   }
 
-  /** map() — transform ageList into pension eligibility (age × 2 for demo) */
+  /** map() — 1-to-1 transform: raw order → fulfillment summary with shipping & ETA */
   runMap(): void {
-    this.mapOutput = [];
-    from(ageList).pipe(
-      map(age => ({ age, pensionScore: age * 2, eligible: age >= 18 })),
+    if (!this.orders.length || this.mapRunning) return;
+
+    console.group(`${LOG} map() pipeline`);
+    this.mapRunning = true;
+    this.mapSummaries = [];
+    this.mapLog = ['map() → transforming each order (1 input → 1 output)…'];
+    this.cdr.detectChanges();
+
+    from(this.orders).pipe(
+      map(order => this.toOrderSummary(order)),
+      tap(summary => {
+        const line = `${summary.orderId}: $${summary.grandTotal.toFixed(2)} (${summary.eta})`;
+        this.mapLog.push(`map() → ${line}`);
+        console.log(`${LOG} map() →`, summary);
+        this.cdr.detectChanges();
+      }),
     ).subscribe({
-      next: r => this.mapOutput.push(`▶ Age ${r.age} → pension score ${r.pensionScore} ${r.eligible ? '✅' : '❌'}`),
-      complete: () => this.mapOutput.push('✅ complete'),
+      next: summary => this.mapSummaries.push(summary),
+      complete: () => {
+        this.mapRunning = false;
+        this.mapLog.push(`map() → complete — ${this.mapSummaries.length} summaries created`);
+        console.log(`${LOG} map() complete`);
+        console.groupEnd();
+        this.cdr.detectChanges();
+      },
     });
   }
 
-  /** mergeMap() — fetch todos for users 1, 2, 3 in PARALLEL from JSONPlaceholder */
+  private toOrderSummary(order: OrderItem): OrderSummary {
+    const shipping = order.priority === 'express' ? 12.99 : 4.99;
+    return {
+      orderId: order.id,
+      customer: order.customer,
+      itemCount: order.items,
+      shipping,
+      grandTotal: order.total + shipping,
+      eta: order.priority === 'express' ? 'Next-day delivery' : '3–5 business days',
+    };
+  }
+
+  /** mergeMap() — parallel inner streams; results may arrive out of order */
   runMergeMap(): void {
-    this.mergeMapOutput = ['⏳ Fetching todos for users 1, 2, 3 in PARALLEL...'];
+    if (this.mergeMapRunning) return;
+
+    console.group(`${LOG} mergeMap() pipeline`);
+    this.mergeMapRunning = true;
+    this.mergeMapResults = [];
+    this.mergeMapLog = [
+      'mergeMap() → fetching JSONPlaceholder users 1, 2, 3 in PARALLEL…',
+      'mergeMap() → delays: User1=1000ms, User2=300ms, User3=600ms (expect 2 → 3 → 1)',
+    ];
+    this.cdr.detectChanges();
 
     from([1, 2, 3]).pipe(
       mergeMap(userId =>
-        this.rxjsService.getTodos().pipe(
-          map((todos: ApiTodo[]) => todos.filter(t => t.userId === userId).slice(0, 2)),
-          map(todos => ({ userId, todos })),
+        this.rxjsService.getUserById(userId).pipe(
+          delay(MERGE_MAP_DELAYS[userId]),
+          map((user: ApiUser) => ({
+            userId,
+            name: user.name,
+            email: user.email,
+            arrivedAt: new Date().toLocaleTimeString(),
+            delayMs: MERGE_MAP_DELAYS[userId],
+          })),
+          tap(result => {
+            const line = `User ${result.userId} (${result.name}) arrived after ${result.delayMs}ms`;
+            this.mergeMapLog.push(`mergeMap() → ✅ ${line}`);
+            console.log(`${LOG} mergeMap() →`, result);
+            this.cdr.detectChanges();
+          }),
         ),
       ),
     ).subscribe({
-      next: result => {
-        this.mergeMapOutput.push(`--- User ${result.userId} (may arrive out of order) ---`);
-        result.todos.forEach(t =>
-          this.mergeMapOutput.push(`  [${t.completed ? '✅' : '⬜'}] ${t.title.substring(0, 50)}`),
-        );
+      next: result => this.mergeMapResults.push(result),
+      complete: () => {
+        this.mergeMapRunning = false;
+        this.mergeMapLog.push('mergeMap() → all parallel requests complete');
+        console.log(`${LOG} mergeMap() complete — arrival order:`, this.mergeMapResults.map(r => r.userId));
+        console.groupEnd();
+        this.cdr.detectChanges();
       },
-      complete: () => this.mergeMapOutput.push('✅ All parallel requests complete'),
+      error: err => {
+        this.mergeMapRunning = false;
+        this.mergeMapLog.push(`mergeMap() → error: ${err.message}`);
+        console.error(`${LOG} mergeMap() error:`, err);
+        console.groupEnd();
+        this.cdr.detectChanges();
+      },
     });
   }
 
-  /** concatMap() — load adminMockData THEN roleMockData SEQUENTIALLY */
+  /** concatMap() — one order fully processed before the next begins */
   runConcatMap(): void {
-    this.concatMapOutput = ['⏳ Loading adminMockData.json → then roleMockData.json (sequential)...'];
+    if (!this.orders.length || this.concatMapRunning) return;
 
-    from(['admin', 'role'] as const).pipe(
-      concatMap(source =>
-        source === 'admin'
-          ? this.rxjsService.getAdminTemplates().pipe(map(data => ({ source, count: data.length, sample: data[0]?.template })))
-          : this.rxjsService.getRoleTemplates().pipe(map(data => ({ source, count: data.length, sample: data[0]?.template }))),
+    const queue = this.orders.slice(0, 3);
+    console.group(`${LOG} concatMap() pipeline`);
+    this.concatMapRunning = true;
+    this.concatMapSteps = [];
+    this.concatMapLog = [
+      `concatMap() → processing ${queue.length} orders ONE AT A TIME…`,
+      `concatMap() → queue: ${queue.map(o => o.id).join(' → ')}`,
+    ];
+    this.concatCurrentOrder = null;
+    this.cdr.detectChanges();
+
+    from(queue).pipe(
+      concatMap(order =>
+        from(FULFILLMENT_STEPS).pipe(
+          concatMap((step, stepIndex) =>
+            of({ order, step, stepIndex }).pipe(
+              delay(500),
+              tap(({ order: o, step: s, stepIndex: i }) => {
+                this.concatCurrentOrder = o.id;
+                const entry: ConcatMapStep = {
+                  orderId: o.id,
+                  customer: o.customer,
+                  step: s,
+                  stepIndex: i + 1,
+                  totalSteps: FULFILLMENT_STEPS.length,
+                };
+                this.concatMapSteps.push(entry);
+                this.concatMapLog.push(`concatMap() → ${o.id} step ${i + 1}/3: ${s}`);
+                console.log(`${LOG} concatMap() →`, entry);
+                this.cdr.detectChanges();
+              }),
+            ),
+          ),
+        ),
       ),
     ).subscribe({
-      next: r => this.concatMapOutput.push(`📂 ${r.source}MockData.json → ${r.count} records (first: "${r.sample}")`),
-      complete: () => this.concatMapOutput.push('✅ Always in order: admin finishes before role starts'),
+      complete: () => {
+        this.concatMapRunning = false;
+        this.concatCurrentOrder = null;
+        this.concatMapLog.push('concatMap() → all orders fulfilled in strict sequence ✅');
+        console.log(`${LOG} concatMap() complete`);
+        console.groupEnd();
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        this.concatMapRunning = false;
+        this.concatCurrentOrder = null;
+        console.error(`${LOG} concatMap() error:`, err);
+        console.groupEnd();
+        this.cdr.detectChanges();
+      },
     });
   }
 
-  /** switchMap() — live doctor search; cancels previous request when user types again */
-  private setupDoctorSearch(): void {
+  /** switchMap() — only the latest search matters; previous HTTP calls cancelled */
+  private setupOrderSearch(): void {
     this.subscriptions.add(
-      this.doctorSearchControl.valueChanges.pipe(
+      this.orderSearchControl.valueChanges.pipe(
+        tap(() => {
+          this.isSearchPending = true;
+          this.cdr.detectChanges();
+        }),
         debounceTime(400),
         distinctUntilChanged(),
         switchMap(term => {
-          if (!term?.trim()) {
+          this.isSearchPending = false;
+          const q = term.trim().toLowerCase();
+
+          if (!q) {
             this.switchMapResults = [];
-            return of([] as DoctorItem[]);
+            this.switchMapLog = [];
+            this.switchMapRunning = false;
+            return of([] as OrderItem[]);
           }
+
+          this.switchMapRunning = true;
           this.switchMapCallCount++;
           const callNum = this.switchMapCallCount;
-          this.switchMapOutput = [`→ Request #${callNum} for "${term}" (previous cancelled)...`];
+          this.switchMapLog = [`switchMap() → request #${callNum} for "${term}" (previous cancelled)…`];
+          console.log(`${LOG} switchMap() request #${callNum}:`, term);
+          this.cdr.detectChanges();
 
-          return this.rxjsService.getDoctors().pipe(
-            delay(500),
-            map(doctors => {
-              const filtered = doctors.filter(d =>
-                d.name.toLowerCase().includes(term.toLowerCase()) ||
-                d.specialty.toLowerCase().includes(term.toLowerCase()),
-              );
-              this.switchMapOutput.push(`✅ Request #${callNum} done → ${filtered.length} doctor(s)`);
-              return filtered;
+          return of(this.orders).pipe(
+            delay(600),
+            map(list => list.filter(o =>
+              o.customer.toLowerCase().includes(q) ||
+              o.id.toLowerCase().includes(q),
+            )),
+            tap(results => {
+              this.switchMapLog.push(`switchMap() → request #${callNum} done → ${results.length} order(s)`);
+              console.log(`${LOG} switchMap() #${callNum} results:`, results);
+              this.switchMapRunning = false;
+              this.cdr.detectChanges();
             }),
           );
         }),
-      ).subscribe(results => { this.switchMapResults = results; }),
+      ).subscribe(results => {
+        this.switchMapResults = results;
+        this.cdr.detectChanges();
+      }),
     );
   }
 
+  clearMap(): void {
+    this.mapSummaries = [];
+    this.mapLog = [];
+    this.mapRunning = false;
+    this.cdr.detectChanges();
+  }
+
+  clearMergeMap(): void {
+    this.mergeMapResults = [];
+    this.mergeMapLog = [];
+    this.mergeMapRunning = false;
+    this.cdr.detectChanges();
+  }
+
+  clearConcatMap(): void {
+    this.concatMapSteps = [];
+    this.concatMapLog = [];
+    this.concatCurrentOrder = null;
+    this.concatMapRunning = false;
+    this.cdr.detectChanges();
+  }
+
   clearSwitchMap(): void {
-    this.switchMapOutput = [];
+    this.orderSearchControl.setValue('');
     this.switchMapResults = [];
+    this.switchMapLog = [];
     this.switchMapCallCount = 0;
-    this.doctorSearchControl.setValue('');
+    this.switchMapRunning = false;
+    this.cdr.detectChanges();
   }
 }

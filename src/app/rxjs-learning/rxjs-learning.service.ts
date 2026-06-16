@@ -10,6 +10,7 @@ import {
   ArtistItem,
   DoctorItem,
   EmployeeItem,
+  OrderItem,
   RoleTemplateItem,
 } from './rxjs-learning.models';
 import { RxjsConstants } from './rxjs-learning.constants';
@@ -41,6 +42,14 @@ export class RxjsLearningService extends WebApiService {
 
   getArtists(): Observable<ArtistItem[]> {
     return this.baseHttpGetRequest<ArtistItem[]>(RxjsConstants.artistDataURL);
+  }
+
+  getOrders(): Observable<OrderItem[]> {
+    return this.baseHttpGetRequest<OrderItem[]>(RxjsConstants.ordersDataURL);
+  }
+
+  getUserById(id: number): Observable<ApiUser> {
+    return this.baseHttpGetRequest<ApiUser>(`${RxjsConstants.usersApiURL}/${id}`);
   }
 
   getAdminTemplates(): Observable<AdminTemplateItem[]> {

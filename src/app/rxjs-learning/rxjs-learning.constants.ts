@@ -11,6 +11,7 @@ export class RxjsConstants {
   public static get artistDataURL(): string { return '/assets/mockData/artistData.json'; }
   public static get adminMockDataURL(): string { return '/assets/mockData/adminMockData.json'; }
   public static get roleMockDataURL(): string { return '/assets/mockData/roleMockData.json'; }
+  public static get ordersDataURL(): string { return '/assets/mockData/ordersData.json'; }
 }
 
 export const colorsList = ['Red', 'Blue', 'Orange', 'Pink', 'Green', 'Yellow'];

@@ -1,0 +1,62 @@
+.inbox-panel {
+  border: solid 1px rgb(88, 88, 88);
+  padding: 12px;
+  background: #fafafa;
+}
+
+.inbox-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0 0 4px;
+}
+
+.inbox-hint {
+  font-size: 12px;
+  color: #666;
+  margin: 0 0 12px;
+}
+
+.inbox-block {
+  margin-bottom: 14px;
+}
+
+.block-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.block-note {
+  font-size: 11px;
+  color: #777;
+  margin: 6px 0 0;
+  font-style: italic;
+}
+
+.state-box {
+  padding: 10px 12px;
+  background: #e8f5e9;
+  border-left: 3px solid #388e3c;
+  border-radius: 4px;
+  font-size: 13px;
+
+  &.empty {
+    background: #f5f5f5;
+    border-left-color: #bbb;
+    color: #888;
+    font-style: italic;
+  }
+}
+
+.event-row {
+  font-size: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}

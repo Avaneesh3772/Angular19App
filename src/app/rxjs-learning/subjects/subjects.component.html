@@ -1,90 +1,79 @@
 <div class="page-container">
-  <p class="page-title">Subjects</p>
-  <p class="page-subtitle">📣 Subject, BehaviorSubject, ReplaySubject — multicast & cross-component communication</p>
+  <p class="page-title">Subject · BehaviorSubject</p>
+  <p class="page-subtitle">📡 Component communication — share state &amp; events through a service</p>
 
-  <div class="concept-bar">
-    Subjects are both Observable <em>and</em> Observer — push values manually with <code>.next()</code>.
-    Multiple components can subscribe to the same instance.
+  <div class="concept-bar exercise-intro">
+    <p><strong>Problem:</strong> Two components need to talk to each other without a direct parent–child binding. Angular uses a shared service with RxJS Subjects.</p>
+    <p><strong>What we built:</strong> <strong>Component A</strong> (buttons below) publishes messages. <strong>Component B</strong> (inbox) and the <strong>app Header</strong> subscribe through <code>RxjsSharedService</code>.</p>
+    <p><strong>BehaviorSubject</strong> — stores the <em>current notification</em>. Any component that subscribes later still gets the latest value immediately (used for shared state).</p>
+    <p><strong>Subject</strong> — emits <em>one-time action events</em>. Only components subscribed at that moment receive it — no memory (used for fire-and-forget events).</p>
   </div>
 
-  <div class="rxjs-operators-grid">
+  <!-- Simple architecture diagram -->
+  <div class="flow-diagram">
+    <span class="flow-box publisher">Component A<br><small>Subjects page</small></span>
+    <span class="flow-arrow">→ .next() →</span>
+    <span class="flow-box service">RxjsSharedService</span>
+    <span class="flow-arrow">→ subscribe →</span>
+    <span class="flow-box subscriber">Component B + Header</span>
+  </div>
 
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>Subject</code></mat-card-title>
-        <mat-card-subtitle>Theme broadcast — push colorsList values to all current subscribers</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="button-row">
-          @for (color of colorsList; track color) {
-            <button mat-stroked-button
-                    [style.border-color]="color"
-                    [style.color]="color"
-                    (click)="broadcastTheme(color)">
-              {{ color }}
-            </button>
-          }
-        </div>
-        <button mat-stroked-button (click)="clearSubjectOutput()">Clear</button>
-        <div class="rxjs-output-box">
-          @for (line of subjectOutput; track $index) { <div>{{ line }}</div> }
-          @if (!subjectOutput.length) { <div class="rxjs-placeholder">Click a color — late subscribers miss past values</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
+  <div class="demo-grid">
 
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>ReplaySubject(2)</code></mat-card-title>
-        <mat-card-subtitle>Admin audit log — new subscribers instantly get the last 2 actions</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="button-row">
-          <button mat-stroked-button (click)="logActivity('Template uploaded')">Upload template</button>
-          <button mat-stroked-button (click)="logActivity('Role assigned')">Assign role</button>
-          <button mat-stroked-button (click)="logActivity('Report exported')">Export report</button>
-        </div>
-        <button mat-raised-button color="accent" (click)="joinLateSubscriber()">Simulate late subscriber</button>
-        <button mat-stroked-button (click)="clearReplayOutput()">Clear</button>
-        <div class="rxjs-output-box">
-          @for (line of replayOutput; track $index) { <div>{{ line }}</div> }
-          @if (!replayOutput.length) { <div class="rxjs-placeholder">Log some actions, then try late subscriber</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <!-- Component A — Publisher -->
+    <div class="publisher-panel">
+      <p class="panel-title">
+        <mat-icon>send</mat-icon>
+        Component A — Publisher
+      </p>
+      <p class="panel-hint">Clicks here call <code>.next()</code> on the shared service.</p>
 
-    <mat-card class="rxjs-operator-card rxjs-operator-card--full">
-      <mat-card-header>
-        <mat-card-title><code>BehaviorSubject</code></mat-card-title>
-        <mat-card-subtitle>Cross-component demo — send message to Header via RxjsSharedService</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Message for Header banner</mat-label>
-          <input matInput [formControl]="behaviorMsgControl" placeholder="e.g. Hello from RxJS Subjects!">
-        </mat-form-field>
-        <div class="button-row">
-          <button mat-raised-button color="primary" (click)="sendToHeader()">📤 Send to Header</button>
-          <button mat-raised-button color="warn" (click)="clearHeaderMessage()">🧹 Clear Header</button>
-          <button mat-stroked-button (click)="showLateBehaviorDemo()">🔔 Late subscriber demo</button>
-        </div>
-        <div class="rxjs-output-box">
-          @for (line of behaviorSubjectOutput; track $index) { <div>{{ line }}</div> }
-          @if (!behaviorSubjectOutput.length) { <div class="rxjs-placeholder">Send a message and watch the Header update</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
+      <div class="section-label">BehaviorSubject — shared state</div>
+      <p class="section-desc">Updates the notification banner in the <strong>Header</strong> and the inbox below.</p>
+      <div class="button-row">
+        @for (n of notifications; track n.message) {
+          <button mat-raised-button color="primary" (click)="sendNotification(n.message)">
+            {{ n.label }}
+          </button>
+        }
+        <button mat-stroked-button color="warn" (click)="clearNotification()">Clear</button>
+      </div>
+
+      <div class="section-label">Subject — one-time events</div>
+      <p class="section-desc">Only <strong>Component B inbox</strong> listens — Header ignores these.</p>
+      <div class="button-row">
+        @for (action of actions; track action) {
+          <button mat-stroked-button (click)="sendAction(action)">
+            {{ action }}
+          </button>
+        }
+      </div>
+
+      <button mat-stroked-button color="warn" (click)="resetAll()" class="reset-btn">Reset notification</button>
+    </div>
+
+    <!-- Component B — Subscriber -->
+    <app-subject-inbox />
 
   </div>
 
-  <mat-card class="rxjs-comparison-card">
-    <mat-card-header><mat-card-title>Subject vs BehaviorSubject vs ReplaySubject</mat-card-title></mat-card-header>
+  <mat-card class="rules-card">
+    <mat-card-header><mat-card-title>Subject vs BehaviorSubject for component communication</mat-card-title></mat-card-header>
     <mat-card-content>
-      <table class="rxjs-comparison-table">
-        <tr><th>Type</th><th>Initial value</th><th>Late subscriber gets</th><th>Use case</th></tr>
-        <tr><td>Subject</td><td>None</td><td>Nothing</td><td>Fire-and-forget events, theme toggle</td></tr>
-        <tr><td>BehaviorSubject</td><td>Required</td><td>Latest value immediately</td><td>Auth state, header banner, current user</td></tr>
-        <tr><td>ReplaySubject(n)</td><td>None</td><td>Last n emissions</td><td>Activity logs, notification history</td></tr>
+      <table class="rules-table">
+        <tr><th>Type</th><th>Remembers value?</th><th>Late subscriber gets</th><th>Use for</th></tr>
+        <tr>
+          <td><code>BehaviorSubject</code></td>
+          <td>Yes — always has a current value</td>
+          <td>Latest value immediately</td>
+          <td>Logged-in user, theme, cart count, status banner</td>
+        </tr>
+        <tr>
+          <td><code>Subject</code></td>
+          <td>No</td>
+          <td>Nothing from the past</td>
+          <td>Button clicks, form saved, logout — fire-and-forget events</td>
+        </tr>
       </table>
     </mat-card-content>
   </mat-card>

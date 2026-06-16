@@ -1,28 +1,53 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 /**
- * Shared service that demonstrates BehaviorSubject for cross-component communication.
- * The RxjsLearningComponent pushes messages here; HeaderComponent displays them.
+ * Shared communication bus for the RxJS Subjects demo.
+ *
+ * BehaviorSubject → shared STATE  (Header + inbox always know the current value)
+ * Subject         → shared EVENTS (inbox only hears events while subscribed)
  */
 @Injectable({ providedIn: 'root' })
 export class RxjsSharedService {
 
-  // BehaviorSubject holds the current value; new subscribers immediately get the last emitted value
-  private headerMessageSubject = new BehaviorSubject<string>('');
+  private notificationState$ = new BehaviorSubject<string>('');
+  private actionEvent$ = new Subject<string>();
 
-  // Expose as plain Observable so consumers cannot call .next() directly
-  headerMessage$: Observable<string> = this.headerMessageSubject.asObservable();
+  /** Current app notification — new subscribers get the latest value immediately */
+  notification$ = this.notificationState$.asObservable();
 
+  /** One-time action events — no memory for late subscribers */
+  action$ = this.actionEvent$.asObservable();
+
+  /** Used by HeaderComponent (alias kept for existing tests) */
+  headerMessage$ = this.notification$;
+
+  publishNotification(message: string): void {
+    this.notificationState$.next(message);
+  }
+
+  clearNotification(): void {
+    this.notificationState$.next('');
+  }
+
+  getCurrentNotification(): string {
+    return this.notificationState$.getValue();
+  }
+
+  publishAction(action: string): void {
+    this.actionEvent$.next(action);
+  }
+
+  // Backward-compatible aliases used by HeaderComponent tests
   sendHeaderMessage(message: string): void {
-    this.headerMessageSubject.next(message);
+    this.publishNotification(message);
   }
 
   clearHeaderMessage(): void {
-    this.headerMessageSubject.next('');
+    this.clearNotification();
   }
 
   getCurrentMessage(): string {
-    return this.headerMessageSubject.getValue();
+    return this.getCurrentNotification();
   }
 }
