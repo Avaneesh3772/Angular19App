@@ -17,7 +17,7 @@ describe('AuthTokenService', () => {
   it('should store and retrieve a token from sessionStorage', () => {
     service.setTokenToSessionStorage('token', 'my-test-token');
     const retrieved = service.getTokenFromSessionStorage('token');
-    expect(retrieved).toBe('"my-test-token"');
+    expect(retrieved).toBe('my-test-token');
   });
 
   it('should return null when key does not exist', () => {

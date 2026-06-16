@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import {
+  ANIMATION_TEST_PROVIDER,
+  ROUTER_TEST_PROVIDER,
+} from '../../testing/test-helpers';
 import { PageNotFoundComponent } from './page-not-found.component';
 
 describe('PageNotFoundComponent', () => {
@@ -8,9 +11,9 @@ describe('PageNotFoundComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PageNotFoundComponent]
-    })
-    .compileComponents();
+      imports: [PageNotFoundComponent],
+      providers: [ROUTER_TEST_PROVIDER, ANIMATION_TEST_PROVIDER],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PageNotFoundComponent);
     component = fixture.componentInstance;
