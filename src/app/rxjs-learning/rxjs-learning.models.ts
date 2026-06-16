@@ -26,3 +26,57 @@ export interface ApiComment {
   email: string;
   body: string;
 }
+
+export interface DoctorItem {
+  id: number;
+  name: string;
+  specialty: string;
+  available: boolean;
+  rating: number;
+  experience: number;
+  nextAvailable: string;
+  fee: number;
+}
+
+export interface EmployeeItem {
+  id: number;
+  name: string;
+  department: string;
+  role: string;
+  salary: number;
+  bonus: number;
+  deductions: number;
+  yearsOfService: number;
+  skills: string[];
+}
+
+export interface ArtistItem {
+  id: number;
+  name: string;
+  genre: string;
+  nationality: string;
+  famousWork: string;
+  birthYear: number;
+}
+
+export interface RoleTemplateItem {
+  template: string;
+  frequency: string;
+  month: number;
+  year: number;
+  lastActionDate: string;
+  status: string;
+  comments: string;
+  user: string;
+}
+
+export interface AdminTemplateItem {
+  quarter: string;
+  month: number;
+  year: number;
+  template: string;
+  status: string;
+  initiationdate: string;
+  comments: string;
+  initiatedby: string;
+}

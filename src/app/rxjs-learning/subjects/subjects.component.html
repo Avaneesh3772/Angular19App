@@ -1,0 +1,91 @@
+<div class="page-container">
+  <p class="page-title">Subjects</p>
+  <p class="page-subtitle">📣 Subject, BehaviorSubject, ReplaySubject — multicast & cross-component communication</p>
+
+  <div class="concept-bar">
+    Subjects are both Observable <em>and</em> Observer — push values manually with <code>.next()</code>.
+    Multiple components can subscribe to the same instance.
+  </div>
+
+  <div class="rxjs-operators-grid">
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>Subject</code></mat-card-title>
+        <mat-card-subtitle>Theme broadcast — push colorsList values to all current subscribers</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="button-row">
+          @for (color of colorsList; track color) {
+            <button mat-stroked-button
+                    [style.border-color]="color"
+                    [style.color]="color"
+                    (click)="broadcastTheme(color)">
+              {{ color }}
+            </button>
+          }
+        </div>
+        <button mat-stroked-button (click)="clearSubjectOutput()">Clear</button>
+        <div class="rxjs-output-box">
+          @for (line of subjectOutput; track $index) { <div>{{ line }}</div> }
+          @if (!subjectOutput.length) { <div class="rxjs-placeholder">Click a color — late subscribers miss past values</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>ReplaySubject(2)</code></mat-card-title>
+        <mat-card-subtitle>Admin audit log — new subscribers instantly get the last 2 actions</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="button-row">
+          <button mat-stroked-button (click)="logActivity('Template uploaded')">Upload template</button>
+          <button mat-stroked-button (click)="logActivity('Role assigned')">Assign role</button>
+          <button mat-stroked-button (click)="logActivity('Report exported')">Export report</button>
+        </div>
+        <button mat-raised-button color="accent" (click)="joinLateSubscriber()">Simulate late subscriber</button>
+        <button mat-stroked-button (click)="clearReplayOutput()">Clear</button>
+        <div class="rxjs-output-box">
+          @for (line of replayOutput; track $index) { <div>{{ line }}</div> }
+          @if (!replayOutput.length) { <div class="rxjs-placeholder">Log some actions, then try late subscriber</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card rxjs-operator-card--full">
+      <mat-card-header>
+        <mat-card-title><code>BehaviorSubject</code></mat-card-title>
+        <mat-card-subtitle>Cross-component demo — send message to Header via RxjsSharedService</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Message for Header banner</mat-label>
+          <input matInput [formControl]="behaviorMsgControl" placeholder="e.g. Hello from RxJS Subjects!">
+        </mat-form-field>
+        <div class="button-row">
+          <button mat-raised-button color="primary" (click)="sendToHeader()">📤 Send to Header</button>
+          <button mat-raised-button color="warn" (click)="clearHeaderMessage()">🧹 Clear Header</button>
+          <button mat-stroked-button (click)="showLateBehaviorDemo()">🔔 Late subscriber demo</button>
+        </div>
+        <div class="rxjs-output-box">
+          @for (line of behaviorSubjectOutput; track $index) { <div>{{ line }}</div> }
+          @if (!behaviorSubjectOutput.length) { <div class="rxjs-placeholder">Send a message and watch the Header update</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <mat-card class="rxjs-comparison-card">
+    <mat-card-header><mat-card-title>Subject vs BehaviorSubject vs ReplaySubject</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <table class="rxjs-comparison-table">
+        <tr><th>Type</th><th>Initial value</th><th>Late subscriber gets</th><th>Use case</th></tr>
+        <tr><td>Subject</td><td>None</td><td>Nothing</td><td>Fire-and-forget events, theme toggle</td></tr>
+        <tr><td>BehaviorSubject</td><td>Required</td><td>Latest value immediately</td><td>Auth state, header banner, current user</td></tr>
+        <tr><td>ReplaySubject(n)</td><td>None</td><td>Last n emissions</td><td>Activity logs, notification history</td></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

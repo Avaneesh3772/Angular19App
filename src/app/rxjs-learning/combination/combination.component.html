@@ -1,0 +1,90 @@
+<div class="page-container">
+  <p class="page-title">Combination Operators</p>
+  <p class="page-subtitle">🔗 forkJoin(), combineLatest(), zip(), merge() — working with multiple streams</p>
+
+  <div class="concept-bar">
+    Combine multiple Observables — wait for all (<code>forkJoin</code>), react to any change (<code>combineLatest</code>),
+    pair by index (<code>zip</code>), or interleave as they arrive (<code>merge</code>).
+  </div>
+
+  <div class="rxjs-operators-grid">
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>forkJoin()</code></mat-card-title>
+        <mat-card-subtitle>Dashboard bootstrap — load doctors + employees together (Promise.all style)</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="primary" (click)="runForkJoin()">Run forkJoin</button>
+        <div class="rxjs-output-box">
+          @for (line of forkJoinOutput; track $index) { <div>{{ line }}</div> }
+          @if (!forkJoinOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>zip()</code></mat-card-title>
+        <mat-card-subtitle>Pair office theme colors with city locations — index by index</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="primary" (click)="runZip()">Run zip(colors$, cities$)</button>
+        <div class="rxjs-output-box">
+          @for (line of zipOutput; track $index) { <div>{{ line }}</div> }
+          @if (!zipOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card rxjs-operator-card--full">
+      <mat-card-header>
+        <mat-card-title><code>combineLatest()</code></mat-card-title>
+        <mat-card-subtitle>User filter dashboard — re-filter usersList when age OR country changes</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="demo-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Minimum age</mat-label>
+            <input matInput type="number" [formControl]="minAgeControl">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <mat-select [formControl]="countryControl">
+              @for (c of ['India', 'Sweden', 'China', 'Russia', 'Canada']; track c) {
+                <mat-option [value]="c">{{ c }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <button mat-stroked-button (click)="clearCombineLatest()">Clear log</button>
+        @if (filteredUsers.length) {
+          <mat-chip-set style="margin-top:8px">
+            @for (u of filteredUsers; track u.name) {
+              <mat-chip>{{ u.name }} ({{ u.age }})</mat-chip>
+            }
+          </mat-chip-set>
+        }
+        <div class="rxjs-output-box">
+          @for (line of combineLatestOutput; track $index) { <div>{{ line }}</div> }
+          @if (!combineLatestOutput.length) { <div class="rxjs-placeholder">Change filters above</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>merge()</code></mat-card-title>
+        <mat-card-subtitle>Art gallery feed — interleave Renaissance + Modernism artist announcements</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="primary" (click)="runMerge()">Run merge(stream1$, stream2$)</button>
+        <div class="rxjs-output-box">
+          @for (line of mergeOutput; track $index) { <div>{{ line }}</div> }
+          @if (!mergeOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="page-container">
+  <p class="page-title">Creation Operators</p>
+  <p class="page-subtitle">🏗️ of(), from(), fromEvent(), toArray() — building Observables from scratch</p>
+
+  <div class="concept-bar">
+    <code>of(a, b, c)</code> — emit known values &nbsp;|&nbsp;
+    <code>from(array)</code> — one emission per array item &nbsp;|&nbsp;
+    <code>fromEvent(el, 'click')</code> — DOM events &nbsp;|&nbsp;
+    <code>toArray()</code> — collect all into one array
+  </div>
+
+  <div class="rxjs-operators-grid">
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>of()</code></mat-card-title>
+        <mat-card-subtitle>Hospital — broadcast urgent specialty alerts from doctorsData.json</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="rxjs-data-hint">Emits each specialty as a separate value, then completes synchronously</p>
+        <button mat-raised-button color="primary" (click)="runOf()">Run of(...specialties)</button>
+        <div class="rxjs-output-box">
+          @for (line of ofOutput; track $index) { <div>{{ line }}</div> }
+          @if (!ofOutput.length) { <div class="rxjs-placeholder">Click Run — uses loaded doctor specialties</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>from()</code></mat-card-title>
+        <mat-card-subtitle>Pharmacy — scan fruitsList inventory one item at a time</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="rxjs-data-hint">Data: fruitsList from rxjs-learning.constants.ts</p>
+        <button mat-raised-button color="primary" (click)="runFrom()">Run from(fruitsList)</button>
+        <div class="rxjs-output-box">
+          @for (line of fromOutput; track $index) { <div>{{ line }}</div> }
+          @if (!fromOutput.length) { <div class="rxjs-placeholder">Click Run to scan inventory</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>fromEvent()</code></mat-card-title>
+        <mat-card-subtitle>Patient check-in desk — every button click is an Observable emission</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="accent" #checkInBtn>🩺 Patient Check-In</button>
+        <button mat-stroked-button (click)="clearFromEventLog()" style="margin-left:8px">Clear</button>
+        <div class="rxjs-output-box">
+          @for (line of fromEventOutput; track $index) { <div>{{ line }}</div> }
+          @if (!fromEventOutput.length) { <div class="rxjs-placeholder">Click check-in — fromEvent() is listening</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>toArray()</code></mat-card-title>
+        <mat-card-subtitle>Logistics — batch all cityList service areas into one shipment manifest</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="rxjs-data-hint">Data: cityList — Delhi, London, Toronto, New York, Tokyo, Paris</p>
+        <button mat-raised-button color="primary" (click)="runToArray()">Run from(cityList).pipe(toArray())</button>
+        <div class="rxjs-output-box">
+          @for (line of toArrayOutput; track $index) { <div>{{ line }}</div> }
+          @if (!toArrayOutput.length) { <div class="rxjs-placeholder">Click Run to batch cities</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

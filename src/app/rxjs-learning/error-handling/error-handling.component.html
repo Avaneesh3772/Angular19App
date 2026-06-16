@@ -1,0 +1,75 @@
+<div class="page-container">
+  <p class="page-title">Error Handling</p>
+  <p class="page-subtitle">⚠️ catchError(), throwError(), retry() — recover gracefully from failures</p>
+
+  <div class="concept-bar warn-bar">
+    <strong>Golden rule:</strong> <code>catchError</code> must <em>return an Observable</em> —
+    use <code>of(fallback)</code>, <code>EMPTY</code>, or chain to another API.
+  </div>
+
+  <div class="rxjs-operators-grid">
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>throwError() + catchError()</code></mat-card-title>
+        <mat-card-subtitle>Payment failure — recover with fallback order IDs</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="warn" (click)="runCatchError()">Simulate error + recover</button>
+        <div class="rxjs-output-box">
+          @for (line of catchErrorOutput; track $index) { <div>{{ line }}</div> }
+          @if (!catchErrorOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>HTTP catchError + fallback API</code></mat-card-title>
+        <mat-card-subtitle>Primary API fails → automatically load doctorsData.json instead</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="warn" (click)="runHttpCatchError()">Run HTTP error recovery</button>
+        <div class="rxjs-output-box">
+          @for (line of httpErrorOutput; track $index) { <div>{{ line }}</div> }
+          @if (!httpErrorOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
+        </div>
+        @if (fallbackDoctors.length) {
+          <div class="rxjs-result-list">
+            @for (doc of fallbackDoctors; track doc.id) {
+              <div class="rxjs-result-item">🩺 {{ doc.name }} — {{ doc.specialty }}</div>
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card rxjs-operator-card--full">
+      <mat-card-header>
+        <mat-card-title><code>retry(2)</code></mat-card-title>
+        <mat-card-subtitle>Transient network errors — retry twice, then load artistData.json on success</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="primary" (click)="runRetry()">Run retry(2) demo</button>
+        <div class="rxjs-output-box">
+          @for (line of retryOutput; track $index) { <div>{{ line }}</div> }
+          @if (!retryOutput.length) { <div class="rxjs-placeholder">Click Run — fails twice, succeeds on 3rd attempt</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <mat-card class="rxjs-comparison-card">
+    <mat-card-header><mat-card-title>catchError patterns</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <div class="rxjs-code-snippet">
+        <pre>
+catchError(err => of([]))              // recover with empty data
+catchError(err => this.fallbackApi())   // switch to backup API
+catchError(err => throwError(() => err)) // rethrow to parent handler
+        </pre>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

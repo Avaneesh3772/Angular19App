@@ -1,0 +1,96 @@
+<div class="page-container">
+  <p class="page-title">Transformation Operators</p>
+  <p class="page-subtitle">🔄 map(), mergeMap(), concatMap(), switchMap() — reshape and flatten streams</p>
+
+  <div class="concept-bar">
+    <code>map</code> transforms values &nbsp;|&nbsp;
+    <code>mergeMap</code> parallel inner streams &nbsp;|&nbsp;
+    <code>concatMap</code> sequential inner streams &nbsp;|&nbsp;
+    <code>switchMap</code> cancels previous inner stream
+  </div>
+
+  <div class="rxjs-operators-grid">
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>map()</code></mat-card-title>
+        <mat-card-subtitle>Pension calculator — transform ageList into eligibility scores</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="primary" (click)="runMap()">Run map(age => pensionScore)</button>
+        <div class="rxjs-output-box">
+          @for (line of mapOutput; track $index) { <div>{{ line }}</div> }
+          @if (!mapOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>mergeMap()</code></mat-card-title>
+        <mat-card-subtitle>Parallel todo fetch for 3 users — JSONPlaceholder /todos</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="primary" (click)="runMergeMap()">Run mergeMap (parallel)</button>
+        <div class="rxjs-output-box">
+          @for (line of mergeMapOutput; track $index) { <div>{{ line }}</div> }
+          @if (!mergeMapOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>concatMap()</code></mat-card-title>
+        <mat-card-subtitle>Sequential load — adminMockData.json first, then roleMockData.json</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="primary" (click)="runConcatMap()">Run concatMap (sequential)</button>
+        <div class="rxjs-output-box">
+          @for (line of concatMapOutput; track $index) { <div>{{ line }}</div> }
+          @if (!concatMapOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="rxjs-operator-card">
+      <mat-card-header>
+        <mat-card-title><code>switchMap()</code></mat-card-title>
+        <mat-card-subtitle>Live doctor search — doctorsData.json with 500ms delay (cancellation demo)</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Search doctors by name or specialty</mat-label>
+          <input matInput [formControl]="doctorSearchControl" placeholder="Try: Cardio, then Cardiology...">
+        </mat-form-field>
+        <button mat-stroked-button (click)="clearSwitchMap()">Clear</button>
+        <div class="rxjs-output-box">
+          @for (line of switchMapOutput; track $index) { <div>{{ line }}</div> }
+          @if (!switchMapOutput.length) { <div class="rxjs-placeholder">Type to trigger switchMap...</div> }
+        </div>
+        @if (switchMapResults.length) {
+          <div class="rxjs-result-list">
+            @for (doc of switchMapResults; track doc.id) {
+              <div class="rxjs-result-item">🩺 {{ doc.name }} — {{ doc.specialty }} (⭐ {{ doc.rating }})</div>
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <mat-card class="rxjs-comparison-card">
+    <mat-card-header>
+      <mat-card-title>mergeMap vs concatMap vs switchMap</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table class="rxjs-comparison-table">
+        <tr><th>Operator</th><th>Concurrency</th><th>Cancels previous?</th><th>Real-world use</th></tr>
+        <tr><td><code>mergeMap</code></td><td>Parallel</td><td>No</td><td>Parallel API calls, upload multiple files</td></tr>
+        <tr><td><code>concatMap</code></td><td>Sequential</td><td>No (queued)</td><td>Ordered saves, pagination chains</td></tr>
+        <tr><td><code>switchMap</code></td><td>Latest only</td><td>Yes</td><td>Search boxes, route param changes</td></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
