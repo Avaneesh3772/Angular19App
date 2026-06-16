@@ -1,0 +1,168 @@
+.loading-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: #555;
+}
+
+.exercise-intro {
+  background: #ffffff;
+  border: solid 1px #999
+}
+
+.left-block-container {
+  border: solid 1px rgb(88, 88, 88);
+  padding: 10px;
+}
+.right-block-container {
+  border: solid 1px rgb(88, 88, 88);
+  padding: 10px;
+}
+
+.exercise-intro {
+  p {
+    margin: 0 0 8px;
+    font-size: 13px;
+    line-height: 1.6;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.doctor-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.3s;
+
+  &.scanning {
+    background: #e3f2fd;
+    border-radius: 4px;
+    padding: 10px 8px;
+    border-left: 3px solid #1976d2;
+  }
+
+  .doctor-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .doctor-name {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .doctor-meta {
+    font-size: 11px;
+    color: #777;
+  }
+}
+
+.phase-badge {
+  margin: 14px 0 10px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  background: #f5f5f5;
+  color: #555;
+
+  &.phase-fromEvent { background: #fff3e0; color: #e65100; }
+  &.phase-of        { background: #e8eaf6; color: #283593; }
+  &.phase-from      { background: #e3f2fd; color: #1565c0; }
+  &.phase-toArray   { background: #f3e5f5; color: #6a1b9a; }
+  &.phase-done      { background: #e8f5e9; color: #2e7d32; }
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  margin: 12px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.meta-chip {
+  font-size: 13px;
+  padding: 4px 0;
+  color: #333;
+}
+
+.scanning-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #e3f2fd;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.schedule-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #f5f5f5;
+
+  mat-icon {
+    color: #388e3c;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .schedule-meta {
+    margin-left: auto;
+    font-size: 11px;
+    color: #777;
+  }
+}
+
+
+.log-line {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.rules-card {
+  margin-top: 24px;
+
+  .rules-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    th {
+      background: #f5f5f5;
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 7px 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    code {
+      background: #e3f2fd;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #1565c0;
+      font-size: 11px;
+    }
+  }
+}

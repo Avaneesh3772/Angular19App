@@ -1,101 +1,189 @@
 <div class="page-container">
-  <p class="page-title">Filtering Operators</p>
-  <p class="page-subtitle">🔍 filter(), take(), debounceTime(), distinctUntilChanged(), shareReplay()</p>
+  <p class="page-title">filter() · take() · debounceTime() · distinctUntilChanged() · shareReplay()</p>
+  <p class="page-subtitle">👥 HR Promotion Shortlisting — find eligible candidates step by step</p>
 
-  <div class="concept-bar">
-    Use filtering to pass only the values you need — by condition, count, timing, or caching for multiple subscribers.
+  <div class="concept-bar exercise-intro">
+    <p><strong>Problem:</strong> HR must shortlist employees for a promotion interview panel — but only from the right department, matching a name search, with 3+ years of service, and only the top 3 candidates.</p>
+    <p><strong>What we built:</strong> A shortlisting dashboard that loads all employees from <code>employeeData.json</code>. The roster starts unfiltered; live search and department filters narrow it. Clicking <strong>Build Interview Panel</strong> runs <code>filter()</code> + <code>take(3)</code>.</p>
+    <p><strong>shareReplay(1)</strong> — loads employee data once; the roster and pipeline share the same cached HTTP response.</p>
+    <p><strong>debounceTime(600)</strong> — search box waits 600ms after you stop typing before filtering the roster.</p>
+    <p><strong>distinctUntilChanged()</strong> — department dropdown skips re-filtering when the same value is selected again.</p>
+    <p><strong>filter()</strong> — keeps only employees with <code>yearsOfService &gt;= 3</code> from the current visible pool.</p>
+    <p><strong>take(3)</strong> — stops after 3 eligible candidates and builds the final interview panel.</p>
   </div>
 
-  <div class="rxjs-operators-grid">
+  @if (isLoadingEmployees) {
+    <div class="loading-row">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Loading employee roster…</span>
+    </div>
+  } @else {
 
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>filter()</code></mat-card-title>
-        <mat-card-subtitle>Loan eligibility — pass only users where eligibility === true</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <button mat-raised-button color="primary" (click)="runFilter()">Run filter(eligible users)</button>
-        <div class="rxjs-output-box">
-          @for (line of filterOutput; track $index) { <div>{{ line }}</div> }
-          @if (!filterOutput.length) { <div class="rxjs-placeholder">Click Run — uses usersList</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <div class="demo-grid">
 
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>take(n)</code></mat-card-title>
-        <mat-card-subtitle>Top 3 doctors — take first 3 from doctorsData.json then stop</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <button mat-raised-button color="primary" (click)="runTake()">Run take(3)</button>
-        <div class="rxjs-output-box">
-          @for (line of takeOutput; track $index) { <div>{{ line }}</div> }
-          @if (!takeOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
+      <!-- LEFT — employee roster (refined by debounce + distinct) -->
+      <div class="left-block-container">
+        <p class="demo-label">
+          Employee Roster
+          <small>from employeeData.json via shareReplay(1)</small>
+        </p>
+        <p class="hint-text">
+          {{ visibleEmployees.length }} of {{ employees.length }} shown
+          @if (selectedDepartment) { · dept: {{ selectedDepartment }} }
+          @if (searchTerm) { · search: "{{ searchTerm }}" }
+          @if (isSearchPending) { · <em>waiting for debounce…</em> }
+        </p>
 
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>debounceTime(600)</code></mat-card-title>
-        <mat-card-subtitle>Employee search — fires only after you stop typing for 600ms</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Search employees (employeeData.json)</mat-label>
-          <input matInput [formControl]="employeeSearchControl" placeholder="Type name or department...">
-        </mat-form-field>
-        <button mat-stroked-button (click)="clearDebounce()">Clear</button>
-        @if (debounceResults.length) {
-          <div class="rxjs-result-list">
-            @for (emp of debounceResults; track emp.id) {
-              <div class="rxjs-result-item">{{ emp.name }} — {{ emp.department }} ({{ emp.role }})</div>
-            }
+        @if (!visibleEmployees.length) {
+          <p class="hint-text">No employees match the current filters.</p>
+        }
+
+        @for (emp of visibleEmployees; track emp.id) {
+          <div class="employee-row"
+               [class.checking]="checkingEmployee?.id === emp.id"
+               [class.filter-pass]="isPassedFilter(emp.id)">
+            <div class="employee-info">
+              <span class="employee-name">{{ emp.name }}</span>
+              <span class="employee-meta">{{ emp.department }} · {{ emp.role }} · {{ emp.yearsOfService }} yrs</span>
+            </div>
+            <span class="eligibility-badge"
+                  [class.eligible]="emp.yearsOfService >= 3"
+                  [class.ineligible]="emp.yearsOfService < 3"
+                  title="Status label only — not a button">
+              {{ emp.yearsOfService >= 3 ? 'Eligible' : 'Too new' }}
+            </span>
           </div>
         }
-        <div class="rxjs-output-box">
-          @for (line of debounceOutput; track $index) { <div>{{ line }}</div> }
-          @if (!debounceOutput.length) { <div class="rxjs-placeholder">Start typing above...</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
 
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>distinctUntilChanged()</code></mat-card-title>
-        <mat-card-subtitle>Department filter — skips re-emitting the same department value</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
+      <!-- RIGHT — filters + screening pipeline -->
+      <div class="right-block-container">
+        <p class="demo-label">
+          Shortlisting Controls
+          <small>debounceTime + distinctUntilChanged live · filter + take on button click</small>
+        </p>
+
+        <!-- debounceTime -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Select department</mat-label>
+          <mat-label>Search by name or role</mat-label>
+          <input matInput [formControl]="searchControl" placeholder="Type and pause 600ms…">         
+          <mat-hint>
+            @if (isSearchPending) { debounceTime(600) — waiting for you to stop typing… }
+            @else { debounceTime(600) — filters roster after a 600ms pause }
+          </mat-hint>
+        </mat-form-field>
+
+        <!-- distinctUntilChanged -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Department</mat-label>
           <mat-select [formControl]="departmentControl">
-            @for (dept of ['Engineering', 'Marketing', 'HR', 'Finance']; track dept) {
+            <mat-option [value]="''">All Departments</mat-option>
+            @for (dept of departmentList; track dept) {
               <mat-option [value]="dept">{{ dept }}</mat-option>
             }
           </mat-select>
+          <mat-hint>distinctUntilChanged()</mat-hint>
         </mat-form-field>
-        <button mat-stroked-button (click)="clearDistinct()">Clear log</button>
-        <div class="rxjs-output-box">
-          @for (line of distinctOutput; track $index) { <div>{{ line }}</div> }
-          @if (!distinctOutput.length) { <div class="rxjs-placeholder">Change department above — re-select same value won't log</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
 
-    <mat-card class="rxjs-operator-card rxjs-operator-card--full">
-      <mat-card-header>
-        <mat-card-title><code>shareReplay(1)</code></mat-card-title>
-        <mat-card-subtitle>Cache JSONPlaceholder /users — 3 subscribers, 1 HTTP request</mat-card-subtitle>
-      </mat-card-header>
+        @if (visibleEmployees.length && currentPhase === 'idle') {
+          <div class="next-step-hint">
+            <strong>Next step:</strong> Click <em>Build Interview Panel</em> to run
+            <code>filter()</code> (yearsOfService &gt;= 3) and <code>take(3)</code> on the
+            {{ visibleEmployees.length }} visible employee(s) shown on the left.
+          </div>
+        }
+
+        <div class="action-row">
+          <button mat-raised-button color="primary"
+                  (click)="buildInterviewPanel()"
+                  [disabled]="!visibleEmployees.length || (screeningStarted && currentPhase !== 'done')">
+            <mat-icon>groups</mat-icon>
+            Build Interview Panel
+          </button>
+          <button mat-stroked-button color="warn" (click)="resetPanel()">Reset Panel</button>
+          <button mat-stroked-button (click)="clearFilters()">Clear Filters</button>
+        </div>
+        <p class="reset-hint">
+          <strong>Reset Panel</strong> — clears interview results &amp; stream log (search/dept stay as-is).
+          <strong>Clear Filters</strong> — restores all {{ employees.length }} employees on the left.
+        </p>
+
+        @if (currentPhase !== 'idle') {
+          <div class="phase-badge" [class]="'phase-' + currentPhase">
+            {{ phaseLabel() }}
+          </div>
+        }
+
+        @if (currentPhase === 'filter' && checkingEmployee) {
+          <div class="section-label">filter() — checking eligibility…</div>
+          <div class="scanning-card">
+            <mat-spinner diameter="24"></mat-spinner>
+            {{ checkingEmployee.name }} — {{ checkingEmployee.yearsOfService }} years
+          </div>
+        }
+
+        @if (filterPassed.length && currentPhase !== 'idle') {
+          <div class="section-label">filter() — passed (yearsOfService &gt;= 3)</div>
+          @for (emp of filterPassed; track emp.id) {
+            <div class="meta-chip">✅ {{ emp.name }} — {{ emp.yearsOfService }} yrs</div>
+          }
+        }
+
+        @if (interviewPanel.length) {
+          <div class="section-label">take(3) — interview panel</div>
+          @for (emp of interviewPanel; track emp.id) {
+            <div class="schedule-row">
+              <mat-icon>person</mat-icon>
+              <span>{{ emp.name }}</span>
+              <span class="schedule-meta">{{ emp.role }} · ${{ emp.salary }}</span>
+            </div>
+          }
+        }
+
+        @if (streamLog.length) {
+          <div class="signal-value-display blue-bg" style="margin-top:16px">
+            <div><strong>Stream activity log</strong></div>
+            @for (line of streamLog; track $index) {
+              <div class="log-line">{{ line }}</div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <mat-card class="rules-card">
+      <mat-card-header><mat-card-title>When to use each filtering operator</mat-card-title></mat-card-header>
       <mat-card-content>
-        <button mat-raised-button color="primary" (click)="runShareReplay()">Run shareReplay demo</button>
-        <div class="rxjs-output-box">
-          @for (line of shareReplayOutput; track $index) { <div>{{ line }}</div> }
-          @if (!shareReplayOutput.length) { <div class="rxjs-placeholder">Click Run</div> }
-        </div>
+        <table class="rules-table">
+          <tr><th>Operator</th><th>What it does</th><th>In this HR example</th></tr>
+          <tr>
+            <td><code>shareReplay(1)</code></td>
+            <td>Caches the last emission; replays to new subscribers</td>
+            <td>Load employeeData.json once — roster and pipeline share the same data</td>
+          </tr>
+          <tr>
+            <td><code>debounceTime(ms)</code></td>
+            <td>Waits for a pause before emitting</td>
+            <td>Search box — don't filter on every keystroke, wait until user stops typing</td>
+          </tr>
+          <tr>
+            <td><code>distinctUntilChanged()</code></td>
+            <td>Skips consecutive duplicate values</td>
+            <td>Department dropdown — re-selecting "Engineering" won't trigger again</td>
+          </tr>
+          <tr>
+            <td><code>filter(predicate)</code></td>
+            <td>Passes only values matching a condition</td>
+            <td>Keep employees with 3+ years of service for promotion eligibility</td>
+          </tr>
+          <tr>
+            <td><code>take(n)</code></td>
+            <td>Emits only the first n values, then completes</td>
+            <td>Shortlist only 3 candidates for the interview panel</td>
+          </tr>
+        </table>
       </mat-card-content>
     </mat-card>
 
-  </div>
+  }
 </div>

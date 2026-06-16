@@ -1,75 +1,137 @@
 <div class="page-container">
-  <p class="page-title">Creation Operators</p>
-  <p class="page-subtitle">🏗️ of(), from(), fromEvent(), toArray() — building Observables from scratch</p>
+  <p class="page-title">of() · from() · fromEvent() · toArray()</p>
+  <p class="page-subtitle">🏥 Doctor Appointment Clinic — build the morning schedule step by step</p>
 
-  <div class="concept-bar">
-    <code>of(a, b, c)</code> — emit known values &nbsp;|&nbsp;
-    <code>from(array)</code> — one emission per array item &nbsp;|&nbsp;
-    <code>fromEvent(el, 'click')</code> — DOM events &nbsp;|&nbsp;
-    <code>toArray()</code> — collect all into one array
+  <div class="concept-bar exercise-intro">
+    <p><strong>Problem:</strong> A cardiology clinic opens every morning. The receptionist needs to publish today’s bookable doctor slots on the appointment board.</p>
+    <p><strong>What we built:</strong> A clinic dashboard that loads doctors from <code>doctorsData.json</code>. Clicking <strong>Open Morning Clinic</strong> runs an RxJS pipeline that builds the schedule step by step.</p>
+    <p><strong>fromEvent()</strong> — waits for the button click; a real user action must happen before anything runs.</p>
+    <p><strong>of()</strong> — emits 3 fixed clinic details (name, shift, date) that we already know upfront.</p>
+    <p><strong>from()</strong> — streams each available doctor one-by-one to scan and verify their slot.</p>
+    <p><strong>toArray()</strong> — collects all scanned doctors into one final schedule array shown on the board.</p>
   </div>
 
-  <div class="rxjs-operators-grid">
+  @if (isLoadingDoctors) {
+    <div class="loading-row">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Loading doctor directory…</span>
+    </div>
+  } @else {
 
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>of()</code></mat-card-title>
-        <mat-card-subtitle>Hospital — broadcast urgent specialty alerts from doctorsData.json</mat-card-subtitle>
-      </mat-card-header>
+    <div class="demo-grid">
+
+      <!-- LEFT — master directory (HTTP load on page open — not part of the click pipeline) -->
+      <div class="left-block-container">
+        <p class="demo-label">
+          Hospital Directory
+          <small>loaded from doctorsData.json on page open</small>
+        </p>
+        <p class="hint-text">Reference list only — the RxJS pipeline on the right runs when you click Open Morning Clinic.</p>
+
+        @for (doc of doctors; track doc.id) {
+          <div class="doctor-row" [class.scanning]="scanningDoctor?.id === doc.id">
+            <div class="doctor-info">
+              <span class="doctor-name">{{ doc.name }}</span>
+              <span class="doctor-meta">{{ doc.specialty }} · ⭐ {{ doc.rating }} · ${{ doc.fee }}</span>
+            </div>
+            <mat-chip [highlighted]="doc.available" [color]="doc.available ? 'primary' : undefined">
+              {{ doc.available ? 'Available' : 'Booked' }}
+            </mat-chip>
+          </div>
+        }
+      </div>
+
+      <!-- RIGHT — pipeline output (appears after Open Morning Clinic click) -->
+      <div class="right-block-container">
+        <p class="demo-label">
+          Appointment Board
+          <small>built by of() → from() → toArray() after you click below</small>
+        </p>
+
+        <button mat-raised-button color="primary" #openClinicBtn
+                [disabled]="!availableDoctors.length || (sessionStarted && currentPhase !== 'done')">
+          <mat-icon>event_available</mat-icon>
+          Open Morning Clinic
+        </button>
+        <button mat-stroked-button color="warn" (click)="resetSession()" style="margin-left:8px">
+          Reset
+        </button>
+
+        @if (currentPhase !== 'idle') {
+          <div class="phase-badge" [class]="'phase-' + currentPhase">
+            {{ phaseLabel() }}
+          </div>
+        }
+
+        <!-- of() output — clinic metadata -->
+        @if (clinicMeta.length) {
+          <div class="section-label">of() — clinic session metadata</div>
+          @for (line of clinicMeta; track $index) {
+            <div class="meta-chip">📋 {{ line }}</div>
+          }
+        }
+
+        <!-- from() output — currently scanning -->
+        @if (currentPhase === 'from' && scanningDoctor) {
+          <div class="section-label">from() — scanning slot…</div>
+          <div class="scanning-card">
+            <mat-spinner diameter="24"></mat-spinner>
+            {{ scanningDoctor.name }} — {{ scanningDoctor.specialty }}
+          </div>
+        }
+
+        <!-- toArray() output — final schedule -->
+        @if (morningSchedule.length) {
+          <div class="section-label">toArray() — morning appointment schedule ({{ morningSchedule.length }} slots)</div>
+          @for (slot of morningSchedule; track slot.id) {
+            <div class="schedule-row">
+              <mat-icon>check_circle</mat-icon>
+              <span>{{ slot.name }}</span>
+              <span class="schedule-meta">{{ slot.specialty }} · {{ slot.nextAvailable }} · ${{ slot.fee }}</span>
+            </div>
+          }
+        }
+
+        @if (streamLog.length) {
+          <div class="signal-value-display blue-bg" style="margin-top:16px">
+            <div><strong>Stream activity log</strong></div>
+            @for (line of streamLog; track $index) {
+              <div class="log-line">{{ line }}</div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Key rules -->
+    <mat-card class="rules-card">
+      <mat-card-header><mat-card-title>When to use each creation operator</mat-card-title></mat-card-header>
       <mat-card-content>
-        <p class="rxjs-data-hint">Emits each specialty as a separate value, then completes synchronously</p>
-        <button mat-raised-button color="primary" (click)="runOf()">Run of(...specialties)</button>
-        <div class="rxjs-output-box">
-          @for (line of ofOutput; track $index) { <div>{{ line }}</div> }
-          @if (!ofOutput.length) { <div class="rxjs-placeholder">Click Run — uses loaded doctor specialties</div> }
-        </div>
+        <table class="rules-table">
+          <tr><th>Operator</th><th>What it creates</th><th>In this clinic example</th></tr>
+          <tr>
+            <td><code>fromEvent(el, 'click')</code></td>
+            <td>Observable from a DOM event</td>
+            <td>Receptionist clicks "Open Morning Clinic" — starts the workflow</td>
+          </tr>
+          <tr>
+            <td><code>of(a, b, c)</code></td>
+            <td>Observable that emits fixed values synchronously</td>
+            <td>Clinic name, shift time, and date — values you already know</td>
+          </tr>
+          <tr>
+            <td><code>from(array)</code></td>
+            <td>Observable that emits each array item one-by-one</td>
+            <td>Scan each available doctor slot individually before confirming</td>
+          </tr>
+          <tr>
+            <td><code>toArray()</code></td>
+            <td>Collects all emissions into one array when source completes</td>
+            <td>Build the final morning schedule array for the appointment board</td>
+          </tr>
+        </table>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>from()</code></mat-card-title>
-        <mat-card-subtitle>Pharmacy — scan fruitsList inventory one item at a time</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="rxjs-data-hint">Data: fruitsList from rxjs-learning.constants.ts</p>
-        <button mat-raised-button color="primary" (click)="runFrom()">Run from(fruitsList)</button>
-        <div class="rxjs-output-box">
-          @for (line of fromOutput; track $index) { <div>{{ line }}</div> }
-          @if (!fromOutput.length) { <div class="rxjs-placeholder">Click Run to scan inventory</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>fromEvent()</code></mat-card-title>
-        <mat-card-subtitle>Patient check-in desk — every button click is an Observable emission</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <button mat-raised-button color="accent" #checkInBtn>🩺 Patient Check-In</button>
-        <button mat-stroked-button (click)="clearFromEventLog()" style="margin-left:8px">Clear</button>
-        <div class="rxjs-output-box">
-          @for (line of fromEventOutput; track $index) { <div>{{ line }}</div> }
-          @if (!fromEventOutput.length) { <div class="rxjs-placeholder">Click check-in — fromEvent() is listening</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="rxjs-operator-card">
-      <mat-card-header>
-        <mat-card-title><code>toArray()</code></mat-card-title>
-        <mat-card-subtitle>Logistics — batch all cityList service areas into one shipment manifest</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="rxjs-data-hint">Data: cityList — Delhi, London, Toronto, New York, Tokyo, Paris</p>
-        <button mat-raised-button color="primary" (click)="runToArray()">Run from(cityList).pipe(toArray())</button>
-        <div class="rxjs-output-box">
-          @for (line of toArrayOutput; track $index) { <div>{{ line }}</div> }
-          @if (!toArrayOutput.length) { <div class="rxjs-placeholder">Click Run to batch cities</div> }
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-  </div>
+  }
 </div>
